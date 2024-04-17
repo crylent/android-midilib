@@ -1,0 +1,4 @@
+/src/androidTest/java/com/crylent/midilib/ExampleInstrumentedTest.kt linguist-generated
+/src/test/java/com/crylent/midilib/ExampleUnitTest.kt linguist-generated
+/src/main/cpp/third_party/** linguist-vendored
+*.h linguist-language=C++

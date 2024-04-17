@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="80dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/shape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_margin="4dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/selectable_button"
+        android:src="@drawable/sine"
+        android:scaleType="fitCenter"
+        tools:ignore="ContentDescription"/>
+
+    <com.lukelorusso.verticalseekbar.VerticalSeekBar
+        android:id="@+id/volume"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="4dp"
+        app:vsb_bar_background="#888888"
+        app:vsb_bar_corner_radius="30dp"
+        app:vsb_bar_progress_gradient_end="#88ff00"
+        app:vsb_bar_progress_gradient_start="#ff8800"
+        app:vsb_progress="50"
+        app:vsb_max_value="100" />
+</LinearLayout>

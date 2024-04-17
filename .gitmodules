@@ -1,0 +1,9 @@
+[submodule "library/src/main/cpp/libsamplerate"]
+	path = library/src/main/cpp/libsamplerate
+	url = https://github.com/libsndfile/libsamplerate
+[submodule "library/src/main/cpp/oboe"]
+	path = library/src/main/cpp/oboe
+	url = https://github.com/google/oboe
+[submodule "library/src/main/cpp/DSPFilters"]
+	path = library/src/main/cpp/DSPFilters
+	url = https://github.com/vinniefalco/DSPFilters
