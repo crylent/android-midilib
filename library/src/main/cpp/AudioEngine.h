@@ -10,6 +10,7 @@ using namespace std;
 using namespace oboe;
 
 #define AUTO_DEFINITION -1
+//#define TEST_LATENCY
 
 class AudioEngine {
 public:
@@ -34,6 +35,10 @@ public:
     static void noteOff(int8_t channel, int8_t note);
     static void allNotesOff(int8_t channel);
 
+#ifdef TEST_LATENCY
+    static void logLatency();
+#endif //TEST_LATENCY
+
 private:
     static shared_ptr<oboe::AudioStream> mStream;
     static mutex mLock;
@@ -46,6 +51,11 @@ private:
 
     static const uint8_t mNumChannels = 16;
     static vector<unique_ptr<Channel>> mChannels;
+
+#ifdef TEST_LATENCY
+    static bool logDone;
+    static chrono::time_point<chrono::steady_clock, chrono::nanoseconds> mNoteOnTime;
+#endif //TEST_LATENCY
 };
 
 #endif //AUDIO_ENGINE_H

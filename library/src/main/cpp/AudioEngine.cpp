@@ -13,6 +13,11 @@ double AudioEngine::mTimeIncrement;
 shared_ptr<FXList> AudioEngine::mMasterEffects;
 vector<unique_ptr<Channel>> AudioEngine::mChannels = vector<unique_ptr<Channel>>();
 
+#ifdef TEST_LATENCY
+bool AudioEngine::logDone = true;
+chrono::time_point<chrono::steady_clock, chrono::nanoseconds> AudioEngine::mNoteOnTime = chrono::time_point<chrono::steady_clock, chrono::nanoseconds>();
+#endif //TEST_LATENCY
+
 /**
  * Starts audio engine with specified configuration.
  * @param sharingMode <a href="https://bit.ly/3KIM1fB"><i>exclusive</i> or <i>shared</i></a>
@@ -161,6 +166,12 @@ void AudioEngine::noteOn(int8_t channel, int8_t note, float amplitude) {
     if (note < 0) {
         throw invalid_argument("Note must be non-negative number. For example, 0 is C0, 57 is A4, 127 is G10.");
     }
+
+#ifdef TEST_LATENCY
+    logDone = false;
+    mNoteOnTime = chrono::high_resolution_clock::now();
+#endif //TEST_LATENCY
+
     mChannels[channel]->noteOn(note, amplitude);
 }
 
@@ -206,3 +217,14 @@ FXList &AudioEngine::getMasterFX() {
 void AudioEngine::allNotesOff(int8_t channel) {
     mChannels[channel]->allNotesOff();
 }
+
+#ifdef TEST_LATENCY
+void AudioEngine::logLatency() {
+    if (logDone) return;
+
+    auto now = chrono::high_resolution_clock::now();
+    double latency = chrono::duration_cast<chrono::microseconds>(now - mNoteOnTime).count() / 1000.;
+    LOGI("Latency: %.1fms", latency);
+    logDone = true;
+}
+#endif //TEST_LATENCY
