@@ -13,7 +13,7 @@ object AudioEngine {
     const val AUTO_DEFINITION = -1
     const val MASTER: Byte = -1
 
-    external fun start(sharedMode: Boolean = false, sampleRate: Int = AUTO_DEFINITION)
+    external fun start(sharedMode: Boolean = false, sampleRate: Int = AUTO_DEFINITION, bufferSize: Int = AUTO_DEFINITION)
     external fun start()
     external fun stop()
 

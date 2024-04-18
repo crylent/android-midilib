@@ -22,7 +22,7 @@ chrono::time_point<chrono::steady_clock, chrono::nanoseconds> AudioEngine::mNote
  * Starts audio engine with specified configuration.
  * @param sharingMode <a href="https://bit.ly/3KIM1fB"><i>exclusive</i> or <i>shared</i></a>
  * @param sampleRate the most common <a href="https://bit.ly/3nVpoM6">sample rates</a> are 44100 and 48000
- * @param bufferSize Default is 256. Using larger buffers might guard against such glitches, but a large buffer also introduces longer audio latency.
+ * @param bufferSize Default is 512. Using larger buffers might guard against such glitches, but a large buffer also introduces longer audio latency.
  * @return <code>Result::OK</code> if started successfully, <code>Result::{some_error}</code> otherwise.
  */
 Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate, int32_t bufferSize) {
@@ -71,7 +71,8 @@ Result AudioEngine::start() {
     if (mSampleRate == AUTO_DEFINITION)
         mSampleRate = mStream->getSampleRate();
     if (mBufferSize == AUTO_DEFINITION)
-        mBufferSize = mStream->getFramesPerBurst();
+        mBufferSize = mStream->getBufferSizeInFrames();
+    else mStream->setBufferSizeInFrames(mBufferSize);
     LOGI("Sample rate: %d", mSampleRate);
     LOGI("Buffer size: %d", mBufferSize);
 

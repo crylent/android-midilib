@@ -17,14 +17,15 @@ Java_com_crylent_midilib_AudioEngine_stop([[maybe_unused]] JNIEnv *env, [[maybe_
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_AudioEngine_start__ZI([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jboolean shared_mode,
-                                               jint sample_rate) {
+Java_com_crylent_midilib_AudioEngine_start__ZII([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jboolean shared_mode,
+                                               jint sample_rate, jint buffer_size) {
     if (shared_mode) {
-        AudioEngine::start(oboe::SharingMode::Shared, sample_rate);
+        AudioEngine::start(oboe::SharingMode::Shared, sample_rate, buffer_size);
     } else {
-        AudioEngine::start(oboe::SharingMode::Exclusive, sample_rate);
+        AudioEngine::start(oboe::SharingMode::Exclusive, sample_rate, buffer_size);
     }
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_crylent_midilib_AudioEngine_noteOn([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel, jbyte note, jfloat amplitude) {
