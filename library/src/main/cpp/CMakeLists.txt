@@ -82,31 +82,19 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        ${log-lib} )
 
-# Set the path to the Oboe directory.
+# Include oboe
 set (OBOE_DIR ${PROJECT_SOURCE_DIR}/oboe)
-
-
-# Add the Oboe library as a subdirectory in your project.
-# add_subdirectory tells CMake to look in this directory to
-# compile oboe source files using oboe's CMake file.
-# ./oboe specifies where the compiled binaries will be stored
 add_subdirectory (${OBOE_DIR} ./oboe)
-
-# Specify the path to the Oboe header files.
-# This allows targets compiled with this CMake (application code)
-# to see public Oboe headers, in order to access its API.
 include_directories (${OBOE_DIR}/include)
-
-target_link_libraries(midilib log oboe android) # You may have other libraries here such as `log`.
 
 # Include libsamplerate
 set (LIBSR_DIR ${PROJECT_SOURCE_DIR}/libsamplerate)
 add_subdirectory(${LIBSR_DIR} ./libsamplerate)
 include_directories(${LIBSR_DIR}/include)
-target_link_libraries(midilib samplerate)
 
 # Include DSPFilters
 set (FILTERS_DIR ${PROJECT_SOURCE_DIR}/DSPFilters/shared/DSPFilters)
 add_subdirectory(${FILTERS_DIR} ./DSPFilters)
 include_directories(${FILTERS_DIR}/include)
-link_directories(${FILTERS_DIR}/source)
+
+target_link_libraries(midilib log oboe android samplerate DSPFilters)
