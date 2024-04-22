@@ -103,3 +103,21 @@ Java_com_crylent_midilib_AudioEngine_renderWavExternal(JNIEnv *env, [[maybe_unus
     AudioEngine::resume();
     return bytes;
 }
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_crylent_midilib_AudioEngine_getSharedMode([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
+    return AudioEngine::isShared();
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_crylent_midilib_AudioEngine_getSampleRate([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
+    return AudioEngine::getSampleRate();
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_crylent_midilib_AudioEngine_getBufferSize([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
+    return AudioEngine::getBufferSize();
+}

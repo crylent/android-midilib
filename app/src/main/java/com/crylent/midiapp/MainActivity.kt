@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.crylent.midilib.AudioEngine
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.play).apply {
             setOnClickListener {
                 AudioEngine.noteOn(0, 60, 1f)
+            }
+        }
+
+        findViewById<SwitchMaterial>(R.id.filterSwitch).apply {
+            setOnCheckedChangeListener { _, checked ->
+                Midi.filter.setEnabled(checked)
             }
         }
     }

@@ -23,7 +23,7 @@ SoundFX &FXList::getEffect(uint8_t i) {
 
 float FXList::applyFX(float sample) {
     for (auto & fx : mEffects) {
-        sample = fx->process(sample);
+        if (fx->isEnabled) sample = fx->process(sample);
     }
     return sample;
 }

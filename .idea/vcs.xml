@@ -2,7 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/library/src/main/cpp/DSPFilters" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/src/main/cpp/DSP-Cpp-filters" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/library/src/main/cpp/libsamplerate" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/library/src/main/cpp/oboe" vcs="Git" />
   </component>

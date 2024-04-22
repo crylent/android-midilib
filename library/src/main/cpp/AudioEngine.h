@@ -8,6 +8,7 @@
 
 using namespace std;
 using namespace oboe;
+using OnStartCallback = function<void()>;
 
 #define AUTO_DEFINITION -1
 //#define TEST_LATENCY
@@ -22,6 +23,7 @@ public:
 
     static void initChannels();
 
+    static bool isShared();
     static int32_t getSampleRate();
     static int32_t getBufferSize();
     static double getTimeIncrement();
@@ -34,6 +36,8 @@ public:
     static void noteOn(int8_t channel, int8_t note, float amplitude);
     static void noteOff(int8_t channel, int8_t note);
     static void allNotesOff(int8_t channel);
+
+    static void AddOnStartListener(OnStartCallback listener);
 
 #ifdef TEST_LATENCY
     static void logLatency();
@@ -51,6 +55,8 @@ private:
 
     static const uint8_t mNumChannels = 16;
     static vector<unique_ptr<Channel>> mChannels;
+
+    static vector<OnStartCallback> mOnStartListeners;
 
 #ifdef TEST_LATENCY
     static bool logDone;

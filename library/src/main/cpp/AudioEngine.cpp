@@ -12,6 +12,7 @@ int32_t AudioEngine::mBufferSize = AUTO_DEFINITION;
 double AudioEngine::mTimeIncrement;
 shared_ptr<FXList> AudioEngine::mMasterEffects;
 vector<unique_ptr<Channel>> AudioEngine::mChannels = vector<unique_ptr<Channel>>();
+vector<OnStartCallback> AudioEngine::mOnStartListeners = vector<OnStartCallback>();
 
 #ifdef TEST_LATENCY
 bool AudioEngine::logDone = true;
@@ -85,6 +86,10 @@ Result AudioEngine::start() {
     }
     LOGI("Audio stream: started");
 
+    for (const auto& onStartListener : mOnStartListeners) {
+        onStartListener();
+    }
+
     return result;
 }
 
@@ -134,6 +139,13 @@ Result AudioEngine::stop() {
         }
     }
     return result;
+}
+
+/**
+ * @return <code>true</code> if sharing mode is <code>Shared</code>, <code>false</code> if sharing mode is <code>Exclusive</code>
+ */
+bool AudioEngine::isShared() {
+    return mSharingMode == SharingMode::Shared;
 }
 
 /**
@@ -229,3 +241,7 @@ void AudioEngine::logLatency() {
     logDone = true;
 }
 #endif //TEST_LATENCY
+
+void AudioEngine::AddOnStartListener(OnStartCallback listener) {
+    mOnStartListeners.push_back(listener);
+}

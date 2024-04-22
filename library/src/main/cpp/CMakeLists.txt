@@ -50,6 +50,7 @@ add_library(
         oscillators/SquareOscillator.cpp
         soundfx/SoundFX.cpp
         soundfx/Limiter.cpp
+        soundfx/Filter.cpp
         FXList.cpp
         log.cpp
 
@@ -92,9 +93,9 @@ set (LIBSR_DIR ${PROJECT_SOURCE_DIR}/libsamplerate)
 add_subdirectory(${LIBSR_DIR} ./libsamplerate)
 include_directories(${LIBSR_DIR}/include)
 
-# Include DSPFilters
-set (FILTERS_DIR ${PROJECT_SOURCE_DIR}/DSPFilters/shared/DSPFilters)
-add_subdirectory(${FILTERS_DIR} ./DSPFilters)
-include_directories(${FILTERS_DIR}/include)
+# Include DSP-Cpp-filters
+set (DSP_DIR ${PROJECT_SOURCE_DIR}/DSP-Cpp-filters/lib)
+add_subdirectory(${DSP_DIR} ./DSP-Cpp-filters)
+include_directories(${DSP_DIR})
 
-target_link_libraries(midilib log oboe android samplerate DSPFilters)
+target_link_libraries(midilib log oboe android samplerate DSP-Cpp-filters)

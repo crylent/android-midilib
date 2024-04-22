@@ -4,6 +4,6 @@
 [submodule "library/src/main/cpp/oboe"]
 	path = library/src/main/cpp/oboe
 	url = https://github.com/google/oboe
-[submodule "library/src/main/cpp/DSPFilters"]
-	path = library/src/main/cpp/DSPFilters
-	url = https://github.com/vinniefalco/DSPFilters
+[submodule "library/src/main/cpp/DSP-Cpp-filters"]
+	path = library/src/main/cpp/DSP-Cpp-filters
+	url = https://github.com/crylent/DSP-Cpp-filters

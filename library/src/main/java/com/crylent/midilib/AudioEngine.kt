@@ -17,6 +17,21 @@ object AudioEngine {
     external fun start()
     external fun stop()
 
+    fun restart(sharedMode: Boolean? = null, sampleRate: Int? = null, bufferSize: Int? = null) {
+        start(
+            sharedMode ?: getSharedMode(),
+            sampleRate ?: getSampleRate(),
+            bufferSize ?: getBufferSize()
+        )
+    }
+    fun setSharedMode(sharedMode: Boolean) = restart(sharedMode = sharedMode)
+    fun setSampleRate(sampleRate: Int) = restart(sampleRate = sampleRate)
+    fun setBufferSize(bufferSize: Int) = restart(bufferSize = bufferSize)
+
+    external fun getSharedMode(): Boolean
+    external fun getSampleRate(): Int
+    external fun getBufferSize(): Int
+
     external fun noteOn(channel: Byte, note: Byte, amplitude: Float)
     external fun noteOff(channel: Byte, note: Byte)
     external fun allNotesOff(channel: Byte)

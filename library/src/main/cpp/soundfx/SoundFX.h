@@ -7,6 +7,8 @@ using namespace std;
 
 class SoundFX {
 public:
+    bool isEnabled = true;
+
     SoundFX();
     virtual ~SoundFX() = default;
 
