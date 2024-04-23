@@ -15,12 +15,17 @@ float Oscillator::eval(double time, float frequency) {
 }
 
 float Oscillator::calcPhase(double time, float frequency, float extraPhase) const {
-    return (float) remainder(time * frequency * mFreqFactor * 2 * M_PI + mPhase + extraPhase, 2 * M_PI);
+    return remainderf(time * frequency * mFreqFactor * 2 * M_PI + mPhase + extraPhase, 2 * M_PI);
+}
+
+float Oscillator::calcFractionPhase(double time, float frequency, float extraPhase) {
+    float integral;
+    return modf(time * frequency * mFreqFactor + (mPhase + extraPhase) / 2 * M_PI, &integral);
 }
 
 /**
  * Sets the amplitude, i.e. volume.
- * @param amplitude positive number from -1.0 to 1.0
+ * @param amplitude positive number from 0.0 to 1.0
  */
 void Oscillator::setAmplitude(float amplitude) {
     mAmplitude = amplitude;

@@ -5,9 +5,9 @@ abstract class Instrument(
     decay: Number,
     sustain: Number,
     release: Number,
-    attackSharpness: Number,
-    decaySharpness: Number,
-    releaseSharpness: Number
+    attackSharpness: Number = 1f,
+    decaySharpness: Number = 1f,
+    releaseSharpness: Number = 1f
 ): Cloneable {
     /** Optional - not used in library, but can be assigned for convenience **/
     var name = ""

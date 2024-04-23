@@ -1,12 +1,15 @@
 package com.crylent.midilib.soundfx
 
-import android.util.Log
-
 abstract class SoundFX: Cloneable {
     abstract fun getId(): Int
     abstract fun getConfig(): Map<String, Number>
 
-    external fun setEnabled(enabled: Boolean)
+    fun setEnabled(enabled: Boolean) {
+        if (linkedChannel != NOT_LINKED) {
+            externalSetEnabled(enabled)
+        }
+    }
+    private external fun externalSetEnabled(enabled: Boolean)
     fun enable() = setEnabled(true)
     fun disable() = setEnabled(false)
 

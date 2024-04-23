@@ -8,6 +8,8 @@
 #include "../oscillators/SquareOscillator.h"
 #include "../oscillators/SawtoothOscillator.h"
 #include "../oscillators/ReverseSawtoothOscillator.h"
+#include "../Assets.h"
+#include "../log.h"
 
 #define GET_SYNTH(index) (dynamic_cast<SynthInstrument&>(*InstrumentLib::getInstrument(index)))
 
@@ -62,9 +64,6 @@ jfloat field = env->GetFloatField(thiz, id_##field)
         thiz = env->CallObjectMethod(thiz, idAsAssetInst);
         auto inst = make_shared<AssetInstrument>(
                 attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
-        jfieldID idRepeatAssets = env->GetFieldID(assetInstCls, "repeatAssets", "Z");
-        bool repeatable = env->GetBooleanField(thiz, idRepeatAssets);
-        inst->setRepeatable(repeatable);
         position = InstrumentLib::addInstrument(inst);
     }
     return (jint) position;
@@ -170,9 +169,22 @@ Java_com_crylent_midilib_Oscillator_externalSetShape(JNIEnv *env, jobject thiz, 
             inst.setOscillatorShape<SawtoothOscillator>(oscIndex); break;
         case SHAPE_REVERSE_SAW:
             inst.setOscillatorShape<ReverseSawtoothOscillator>(oscIndex); break;
+        case SHAPE_CUSTOM:
+            inst.setOscillatorShape<CustomOscillator>(oscIndex); break;
         default:
             break;
     }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_crylent_midilib_Oscillator_loadWaveform(JNIEnv *env, jobject thiz, jbyteArray wav_data,
+                                                 jint data_size) {
+    OSC_FUNCTION_BEGIN(env, thiz);
+    auto& osc = dynamic_cast<CustomOscillator&>(inst.getOscillatorByIndex(oscIndex));
+    auto array = env->GetByteArrayElements(wav_data, nullptr);
+    auto data = vector<uint8_t>(array, array + data_size);
+    osc.loadWaveform(data);
 }
 
 extern "C"
@@ -223,31 +235,30 @@ Java_com_crylent_midilib_Oscillator_externalSetPhaseShift(JNIEnv *env, jobject t
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_crylent_midilib_instrument_AssetInstrument_externalLoadAsset(JNIEnv *env, jobject thiz,
-                                                                      jbyte note,
                                                                       jbyteArray wav_data,
-                                                                      jint data_size,
-                                                                      jboolean is_base_asset) {
+                                                                      jint data_size, jbyte note) {
     int32_t index = getLibIndex(env, thiz);
     auto array = env->GetByteArrayElements(wav_data, nullptr);
-    auto data = make_unique<vector<uint8_t>>(array, array + data_size);
+    auto data = vector<uint8_t>(array, array + data_size);
     auto& inst = GET_AINST(index);
-    if (is_base_asset) inst.loadBaseAsset(note, std::move(data));
-    else inst.loadAsset(note, std::move(data));
+    inst.loadAsset(note, data);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_AssetInstrument_externalSetRepeatable(JNIEnv *env, jobject thiz,
-                                                                          jboolean repeatable) {
+Java_com_crylent_midilib_instrument_AssetInstrument_copyAssetToRange(JNIEnv *env, jobject thiz,
+                                                                     jbyte baseNote,
+                                                                     jbyte min, jbyte max) {
     int32_t index = getLibIndex(env, thiz);
-    GET_AINST(index).setRepeatable(repeatable);
+    auto& inst = GET_AINST(index);
+    inst.copySampleToRange(baseNote, min, max);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_crylent_midilib_instrument_AssetInstrument_00024Companion_externalSetResamplingQuality(
         [[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jint quality) {
-    AssetInstrument::setResamplingQuality(quality);
+    Assets::setResamplingQuality(quality);
 }
 
 #undef GET_AINST

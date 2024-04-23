@@ -5,12 +5,14 @@
 #include "../oscillators/SquareOscillator.h"
 #include "../oscillators/SawtoothOscillator.h"
 #include "../oscillators/ReverseSawtoothOscillator.h"
+#include "../oscillators/CustomOscillator.h"
 
 #define SHAPE_SINE 0
 #define SHAPE_TRIANGLE 1
 #define SHAPE_SQUARE 2
 #define SHAPE_SAW 3
 #define SHAPE_REVERSE_SAW 4
+#define SHAPE_CUSTOM 5
 
 static unique_ptr<Oscillator> makeOscillator(int shapeOrdinal, float amplitude, float phase, float freqFactor) {
     switch (shapeOrdinal) {
@@ -24,6 +26,8 @@ static unique_ptr<Oscillator> makeOscillator(int shapeOrdinal, float amplitude, 
             return make_unique<SawtoothOscillator>(amplitude, phase, freqFactor);
         case SHAPE_REVERSE_SAW:
             return make_unique<ReverseSawtoothOscillator>(amplitude, phase, freqFactor);
+        case SHAPE_CUSTOM:
+            return make_unique<CustomOscillator>(amplitude, phase, freqFactor);
         default:
             return nullptr;
     }

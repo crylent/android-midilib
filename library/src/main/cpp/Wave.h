@@ -7,14 +7,14 @@ using namespace std;
 
 class Wave {
 public:
-    Wave(shared_ptr<Instrument> instrument, int8_t note, float amplitude);
+    Wave(Instrument& instrument, int8_t note, float amplitude);
 
     float nextSample();
 
     void release();
 
 private:
-    shared_ptr<Instrument> mInstrument;
+    Instrument& mInstrument;
     int8_t mNote;
     float mAmplitude;
     double mTimeIncrement;

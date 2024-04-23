@@ -9,7 +9,7 @@ public:
 
 private:
     // Base note is A4
-    static int8_t const base_note = 57;
+    static int8_t const base_note = 69;
     static float constexpr base_frequency = 440;
 };
 

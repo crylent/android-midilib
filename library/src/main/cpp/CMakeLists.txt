@@ -41,6 +41,7 @@ add_library(
         instrument/InstrumentLib.cpp
         Channel.cpp
         NoteFrequency.cpp
+        Assets.cpp
         oscillators/Oscillator.cpp
         oscillators/Detune.cpp
         oscillators/SineOscillator.cpp
@@ -48,6 +49,7 @@ add_library(
         oscillators/SawtoothOscillator.cpp
         oscillators/ReverseSawtoothOscillator.cpp
         oscillators/SquareOscillator.cpp
+        oscillators/CustomOscillator.cpp
         soundfx/SoundFX.cpp
         soundfx/Limiter.cpp
         soundfx/Filter.cpp

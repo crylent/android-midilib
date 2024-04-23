@@ -15,20 +15,6 @@ public:
     Oscillator(float amplitude, float phase = 0, float freqFactor = 1);
     virtual ~Oscillator() = default;
 
-    // copy constructor
-    /*template<typename AnyOscillator>
-    requires(is_base_of<Oscillator, AnyOscillator>())
-    Oscillator(AnyOscillator &original) {
-        mAmplitude = original.mAmplitude;
-        mPhase = original.mPhase;
-        mFreqFactor = original.mFreqFactor;
-        mEnabled = original.mEnabled;
-        if (original.mDetune) {
-            mDetune = make_unique<Detune>(*this, *original.mDetune);
-            //setDetune(original.mDetune.u);
-        }
-    }*/
-
     void enable();
     void disable();
 
@@ -42,7 +28,8 @@ public:
     void clearDetune();
 
 protected:
-    float calcPhase(double time, float frequency, float extraPhase = 0) const;
+    float calcPhase(double time, float frequency, float extraPhase = 0) const; // from -pi to pi
+    float calcFractionPhase(double time, float frequency, float extraPhase = 0); // from 0 to 1
 
     void copyFrom(Oscillator& other) {
         mAmplitude = other.mAmplitude;

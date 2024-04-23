@@ -2,42 +2,22 @@
 
 #include <utility>
 #include "../AudioEngine.h"
-#include "samplerate.h"
 #include "../NoteFrequency.h"
-
-uint8_t AssetInstrument::mResamplingQuality = SRC_SINC_FASTEST;
+#include "../Assets.h"
 
 float AssetInstrument::sample(double time, int8_t note) {
     auto& data = mSamples[note];
     if (!data.empty()) {
         auto i = (size_t) round(time / AudioEngine::getTimeIncrement());
-        if (mIsRepeatable) {
-            i = i % data.size();
-        }
         if (i < data.size()) return data[i];
     }
-    return NAN;
+    return .0f;
 }
 
-void AssetInstrument::loadAsset(int8_t note, unique_ptr<vector<uint8_t>> wavData) {
-    vector<float> samples;
+void AssetInstrument::loadAsset(int8_t note, vector<uint8_t>& wavData) {
     uint32_t sampleRate;
-    try { // Assume WAV file has float format
-        AudioFile<float> audioFile;
-        audioFile.loadFromMemory(*wavData);
-        samples = audioFile.samples[0];
-        sampleRate = audioFile.getSampleRate();
-    } catch (exception& e) { // Integer (PCM) format
-        AudioFile<int32_t> audioFile;
-        audioFile.loadFromMemory(*wavData);
-        size_t numSamples = audioFile.getNumSamplesPerChannel();
-        samples.reserve(numSamples);
-        auto sampleMax = (float) pow(2, audioFile.getBitDepth());
-        for (size_t i = 0; i < numSamples; i++) {
-            samples[i] = float(audioFile.samples[0][i]) / sampleMax;
-        }
-        sampleRate = audioFile.getSampleRate();
-    }
+    vector<float> samples;
+    Assets::loadWavData(wavData, samples, sampleRate);
     if (AudioEngine::getSampleRate() != sampleRate) {
         double ratio = double(AudioEngine::getSampleRate()) / double(sampleRate);
         resampleAndAssign(samples, ratio, note);
@@ -46,9 +26,8 @@ void AssetInstrument::loadAsset(int8_t note, unique_ptr<vector<uint8_t>> wavData
     }
 }
 
-void AssetInstrument::loadBaseAsset(int8_t baseNote, unique_ptr<vector<uint8_t>> wavData) {
-    loadAsset(baseNote, std::move(wavData));
-    for (int8_t note = 0; note >= 0; note++) {
+void AssetInstrument::copySampleToRange(int8_t baseNote, int8_t min, int8_t max) {
+    for (int8_t note = min; note <= max && note > 0; note++) {
         if (note == baseNote) continue;
         double ratio = NoteFrequency::get(baseNote) / NoteFrequency::get(note);
         resampleAndAssign(mSamples[baseNote], ratio, note);
@@ -56,28 +35,7 @@ void AssetInstrument::loadBaseAsset(int8_t baseNote, unique_ptr<vector<uint8_t>>
 }
 
 void AssetInstrument::resampleAndAssign(vector<float> &dataIn, double ratio, int8_t note) {
-    size_t inSamples = dataIn.size();
-    size_t outSamples = ceil(double(inSamples) * ratio);
-    auto data = make_unique<SRC_DATA>();
-    data->data_in = dataIn.data();
-    auto* outData = new float[outSamples];
-    data->data_out = outData;
-    data->input_frames = long(inSamples);
-    data->output_frames = long(outSamples);
-    data->src_ratio = ratio;
-    src_simple(data.get(), mResamplingQuality, 1);
-    mSamples[note].assign(outData, outData + outSamples);
-}
-
-void AssetInstrument::setRepeatable(bool isRepeatable) {
-    mIsRepeatable = isRepeatable;
-}
-
-void AssetInstrument::setResamplingQuality(uint8_t quality) {
-    if (quality != SRC_LINEAR &&
-        quality != SRC_ZERO_ORDER_HOLD &&
-        quality != SRC_SINC_FASTEST &&
-        quality != SRC_SINC_MEDIUM_QUALITY &&
-        quality != SRC_SINC_BEST_QUALITY) throw invalid_argument("Invalid resampling quality");
-    mResamplingQuality = quality;
+    vector<float> dataOut;
+    Assets::resample(dataIn, dataOut, ratio);
+    mSamples[note] = dataOut;
 }

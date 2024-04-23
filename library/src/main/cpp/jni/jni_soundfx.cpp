@@ -164,7 +164,7 @@ Java_com_crylent_midilib_AudioEngine_clearEffects([[maybe_unused]] JNIEnv *env, 
 #undef LIMITER
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_soundfx_SoundFX_setEnabled(JNIEnv *env, jobject thiz, jboolean enabled) {
+Java_com_crylent_midilib_soundfx_SoundFX_externalSetEnabled(JNIEnv *env, jobject thiz, jboolean enabled) {
     auto& effect = getEffect(env, thiz);
     effect.isEnabled = enabled;
 }

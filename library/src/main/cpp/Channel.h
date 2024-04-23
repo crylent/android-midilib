@@ -9,9 +9,8 @@ using namespace std;
 
 class Channel {
 public:
-    Channel();
+    Channel(shared_ptr<Instrument> instrument);
 
-    static void setDefaultInstrument(shared_ptr<Instrument> instrument);
     void setInstrument(shared_ptr<Instrument> instrument);
 
     void noteOn(int8_t note, float amplitude);
@@ -21,7 +20,6 @@ public:
     float nextSample();
 
 private:
-    static shared_ptr<Instrument> mDefaultInstrument;
     shared_ptr<Instrument> mInstrument;
     mutex mLock;
     unordered_map<int8_t, unique_ptr<Wave>> mWaves = unordered_map<int8_t, unique_ptr<Wave>>();

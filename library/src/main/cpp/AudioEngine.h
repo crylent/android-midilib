@@ -21,7 +21,7 @@ public:
     static Result resume();
     static Result stop();
 
-    static void initChannels();
+    static void initChannels(shared_ptr<Instrument> instrument);
 
     static bool isShared();
     static int32_t getSampleRate();

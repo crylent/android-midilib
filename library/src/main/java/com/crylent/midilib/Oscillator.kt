@@ -1,5 +1,8 @@
 package com.crylent.midilib
 
+import android.content.Context
+import android.util.Log
+import com.crylent.midilib.instrument.Asset
 import com.crylent.midilib.instrument.Instrument
 import com.crylent.midilib.instrument.SynthInstrument
 import kotlin.math.log2
@@ -12,7 +15,7 @@ class Oscillator(
     amplitude: Number = 1f,
     phase: Number = 0f,
     frequencyFactor: Number = 1f
-): Cloneable {
+): Cloneable, AssetLoader {
     var enabled = true
         set(value) {
             field = value
@@ -68,6 +71,18 @@ class Oscillator(
 
     private var usePitch = false
 
+    override fun loadAsset(context: Context, asset: Asset) {
+        // TODO: on assigned to instrument listener
+        if (shape != Shape.CUSTOM)
+            throw UnsupportedOperationException("loadAsset is available only for custom shape")
+        if (asset.note != Asset.NOTE_AUTO)
+            Log.w("MidiLib", "Note is unused")
+        val bytes = asset.readBytes(context)
+        loadWaveform(bytes, bytes.size)
+    }
+
+    private external fun loadWaveform(wavData: ByteArray, dataSize: Int)
+
     var detune: Detune? = null
         private set
 
@@ -76,7 +91,7 @@ class Oscillator(
     val oscIndex get() = owner?.getOscillatorIndex(this) ?: -1
 
     enum class Shape {
-        SINE, TRIANGLE, SQUARE, SAW, REVERSE_SAW
+        SINE, TRIANGLE, SQUARE, SAW, REVERSE_SAW, CUSTOM
     }
 
     class Detune(private val owner: Oscillator, unisonVoices: Int, detune: Float) {

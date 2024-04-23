@@ -39,13 +39,15 @@ Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate, int32_t b
  */
 Result AudioEngine::start() {
     lock_guard<mutex> lockGuard(mLock);
-    auto defaultSynth = make_shared<SynthInstrument>();
-    defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
-    defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
-    defaultSynth->getOscillatorByIndex(0).setDetune();
 
-    Channel::setDefaultInstrument(std::move(defaultSynth));
-    initChannels();
+    if (getChannels().empty()) {
+        auto defaultSynth = make_shared<SynthInstrument>();
+        defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
+        defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
+        defaultSynth->getOscillatorByIndex(0).setDetune();
+        initChannels(defaultSynth);
+    }
+
     auto player = make_unique<WavePlayer>();
     mMasterEffects = player->getEffects();
     auto* callback = new AudioCallback(std::move(player));
@@ -201,11 +203,11 @@ void AudioEngine::noteOff(int8_t channel, int8_t note) {
 }
 
 /** Initializes all channels with default instrument. */
-void AudioEngine::initChannels() {
+void AudioEngine::initChannels(shared_ptr<Instrument> instrument) {
     mChannels.clear();
     mChannels.reserve(mNumChannels);
     for (int8_t i = 0; i < mNumChannels; i++) {
-        mChannels.push_back(make_unique<Channel>());
+        mChannels.push_back(make_unique<Channel>(instrument));
     }
 }
 
