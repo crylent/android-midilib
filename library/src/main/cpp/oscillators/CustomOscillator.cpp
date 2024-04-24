@@ -7,10 +7,10 @@
 float CustomOscillator::evalVoice(double time, float frequency) {
     if (!mSamples) return sinf(calcPhase(time, frequency));
     float fractionPhase = calcFractionPhase(time, frequency);
-    float point = fractionPhase * mSamples->size();
+    float point = fractionPhase * mSamplesNum;
     size_t i = size_t(point);
     float left = mSamples->at(i), right;
-    if (i + 1 < mSamples->size()) right = mSamples->at(i + 1);
+    if (i + 1 < mSamplesNum) right = mSamples->at(i + 1);
     else right = mSamples->at(0);
     float interPoint = remainderf(point, 1);
     return left + (right - left) * interPoint; // linear interpolation
