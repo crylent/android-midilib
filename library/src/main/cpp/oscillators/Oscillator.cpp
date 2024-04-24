@@ -20,7 +20,7 @@ float Oscillator::calcPhase(double time, float frequency, float extraPhase) cons
 
 float Oscillator::calcFractionPhase(double time, float frequency, float extraPhase) {
     float integral;
-    return modf(time * frequency * mFreqFactor + (mPhase + extraPhase) / 2 * M_PI, &integral);
+    return modf(time * frequency * mFreqFactor + (mPhase + extraPhase) / (2 * M_PI), &integral);
 }
 
 /**
