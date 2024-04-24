@@ -1,7 +1,7 @@
 #include "SineOscillator.h"
 
-float SineOscillator::evalVoice(double time, float frequency, float extraPhase) {
-    return sinf(calcPhase(time, frequency, extraPhase));
+float SineOscillator::evalVoice(double time, float frequency) {
+    return sinf(calcPhase(time, frequency));
 }
 
 SineOscillator::SineOscillator(Oscillator &other) {

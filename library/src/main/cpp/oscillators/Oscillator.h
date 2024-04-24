@@ -9,7 +9,7 @@ using namespace std;
 class Oscillator {
 public:
     float eval(double time, float frequency);
-    virtual float evalVoice(double time, float frequency, float extraPhase = 0) = 0;
+    virtual float evalVoice(double time, float frequency) = 0;
 
     Oscillator() = default;
     Oscillator(float amplitude, float phase = 0, float freqFactor = 1);
@@ -28,8 +28,8 @@ public:
     void clearDetune();
 
 protected:
-    float calcPhase(double time, float frequency, float extraPhase = 0) const; // from -pi to pi
-    float calcFractionPhase(double time, float frequency, float extraPhase = 0); // from 0 to 1
+    float calcPhase(double time, float frequency) const; // from -pi to pi
+    float calcFractionPhase(double time, float frequency); // from 0 to 1
 
     void copyFrom(Oscillator& other) {
         mAmplitude = other.mAmplitude;

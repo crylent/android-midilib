@@ -4,9 +4,9 @@
 #include "../Assets.h"
 #include "../NoteFrequency.h"
 
-float CustomOscillator::evalVoice(double time, float frequency, float extraPhase) {
-    if (!mSamples) return sinf(calcPhase(time, frequency, extraPhase));
-    float fractionPhase = calcFractionPhase(time, frequency, extraPhase);
+float CustomOscillator::evalVoice(double time, float frequency) {
+    if (!mSamples) return sinf(calcPhase(time, frequency));
+    float fractionPhase = calcFractionPhase(time, frequency);
     float point = fractionPhase * mSamples->size();
     size_t i = size_t(point);
     float left = mSamples->at(i), right;

@@ -14,13 +14,13 @@ float Oscillator::eval(double time, float frequency) {
     return mAmplitude * mDetune->process(time, frequency);
 }
 
-float Oscillator::calcPhase(double time, float frequency, float extraPhase) const {
-    return remainderf(time * frequency * mFreqFactor * 2 * M_PI + mPhase + extraPhase, 2 * M_PI);
+float Oscillator::calcPhase(double time, float frequency) const {
+    return remainderf(time * frequency * mFreqFactor * 2 * M_PI + mPhase, 2 * M_PI);
 }
 
-float Oscillator::calcFractionPhase(double time, float frequency, float extraPhase) {
+float Oscillator::calcFractionPhase(double time, float frequency) {
     float integral;
-    return modf(time * frequency * mFreqFactor + (mPhase + extraPhase) / (2 * M_PI), &integral);
+    return modf(time * frequency * mFreqFactor + mPhase / (2 * M_PI), &integral);
 }
 
 /**

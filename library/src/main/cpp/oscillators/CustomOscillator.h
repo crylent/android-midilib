@@ -8,7 +8,7 @@ class CustomOscillator: public Oscillator {
     using Oscillator::Oscillator;
 
 public:
-    float evalVoice(double time, float frequency, float extraPhase) override;
+    float evalVoice(double time, float frequency) override;
 
     CustomOscillator(vector<uint8_t>& wavData,
                      float amplitude = 1, float phase = 0, float freqFactor = 1);
