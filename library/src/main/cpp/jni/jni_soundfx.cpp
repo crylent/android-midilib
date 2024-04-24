@@ -58,7 +58,8 @@ Java_com_crylent_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jo
         FXList& masterFx = AudioEngine::getMasterFX();
         i = masterFx.addEffect(std::move(effect));
     } else {
-        throw exception(); // Not implemented
+        FXList& fx = AudioEngine::getChannels()[channel]->getEffects();
+        i = fx.addEffect(std::move(effect));
     }
     return static_cast<jbyte>(i);
 }

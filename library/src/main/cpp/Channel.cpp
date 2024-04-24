@@ -21,7 +21,7 @@ float Channel::nextSample() {
             sampleValue += waveValue;
         }
     }
-    return sampleValue;
+    return applyFX(sampleValue);
 }
 
 void Channel::noteOn(int8_t note, float amplitude) {
@@ -43,4 +43,12 @@ void Channel::allNotesOff() {
     for (auto & wave : mWaves) {
         wave.second->release();
     }
+}
+
+float Channel::applyFX(float sample) {
+    return mEffects->applyFX(sample);
+}
+
+FXList& Channel::getEffects() {
+    return *mEffects;
 }

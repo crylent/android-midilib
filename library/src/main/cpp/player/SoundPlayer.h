@@ -13,8 +13,10 @@ public:
 
     virtual void fillBuffer(float* buffer, size_t numFrames) = 0;
 
-    float applyFX(float sample);
     shared_ptr<FXList> getEffects();
+
+protected:
+    float applyFX(float sample);
 
 private:
     shared_ptr<FXList> mEffects = make_shared<FXList>();
