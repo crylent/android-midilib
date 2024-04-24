@@ -71,13 +71,25 @@ class Oscillator(
 
     private var usePitch = false
 
+    private var asset: Asset? = null
+    private var context: Context? = null
+
     override fun loadAsset(context: Context, asset: Asset) {
-        // TODO: on assigned to instrument listener
         if (shape != Shape.CUSTOM)
             throw UnsupportedOperationException("loadAsset is available only for custom shape")
         if (asset.note != Asset.NOTE_AUTO)
             Log.w("MidiLib", "Note is unused")
-        val bytes = asset.readBytes(context)
+        this.asset = asset
+        this.context = context
+        ifOwnerIsLinkedToLib {
+            loadWaveform()
+        }
+    }
+
+
+    fun loadWaveform() {
+        if (asset == null || context == null) return
+        val bytes = asset!!.readBytes(context!!)
         loadWaveform(bytes, bytes.size)
     }
 

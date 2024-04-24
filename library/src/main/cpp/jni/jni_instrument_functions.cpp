@@ -75,6 +75,11 @@ static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator
     }
 
     inst.addOscillator(std::move(osc));
+
+    if (shapeOrdinal == SHAPE_CUSTOM) {
+        jmethodID idLoadWaveform = env->GetMethodID(oscCls, "loadWaveform", "()V");
+        env->CallVoidMethod(oscillator, idLoadWaveform);
+    }
 }
 
 static int32_t getLibIndex(JNIEnv *env, jobject thiz) {
