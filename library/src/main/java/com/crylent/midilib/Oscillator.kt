@@ -109,7 +109,6 @@ class Oscillator(
     class Detune(private val owner: Oscillator, unisonVoices: Int, detune: Float) {
         var unisonVoices = unisonVoices
             set(value) {
-                _phases.addAll(List(value - field) { 0f })
                 field = value
                 owner.apply {
                     ifOwnerIsLinkedToLib {
@@ -127,20 +126,6 @@ class Oscillator(
                     }
                 }
             }
-
-        private val _phases = MutableList(unisonVoices) { 0f }
-        val phases = _phases.toList()
-
-        fun setPhaseShift(voice: Int, phaseShift: Float) {
-            _phases[voice] = phaseShift
-            owner.apply {
-                ifOwnerIsLinkedToLib {
-                    externalSetPhaseShift(voice, phaseShift)
-                }
-            }
-        }
-
-        fun getPhaseShift(voice: Int) = _phases[voice]
     }
 
     fun enableDetune(unisonVoices: Int, detuneLevel: Number) {
@@ -168,7 +153,6 @@ class Oscillator(
     private external fun externalDisableDetune()
     private external fun externalSetUnisonVoices(value: Int)
     private external fun externalSetDetuneLevel(value: Float)
-    private external fun externalSetPhaseShift(voice: Int, value: Float)
 
     public override fun clone() = Oscillator(shape, amplitude, phase, frequencyFactor).also {
         if (!enabled) it.enabled = false

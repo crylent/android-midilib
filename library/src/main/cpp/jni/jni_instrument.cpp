@@ -218,14 +218,6 @@ Java_com_crylent_midilib_Oscillator_externalSetDetuneLevel(JNIEnv *env, jobject 
     inst.getOscillatorByIndex(oscIndex).getDetune().setDetune(value);
 }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_crylent_midilib_Oscillator_externalSetPhaseShift(JNIEnv *env, jobject thiz, jint voice,
-                                                          jfloat value) {
-    OSC_FUNCTION_BEGIN(env, thiz);
-    inst.getOscillatorByIndex(oscIndex).getDetune().setPhaseShift(voice, value);
-}
-
 #undef OSC_FUNCTION_BEGIN
 #undef GET_SYNTH
 #undef SYNTH_INSTRUMENT

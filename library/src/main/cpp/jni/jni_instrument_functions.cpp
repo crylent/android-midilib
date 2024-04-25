@@ -51,7 +51,6 @@ static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator
     jclass detuneCls = env->FindClass("com/crylent/midilib/Oscillator$Detune");
     jfieldID idUnisonVoices = env->GetFieldID(detuneCls, "unisonVoices", "I");
     jfieldID idDetuneValue = env->GetFieldID(detuneCls, "detune", "F");
-    jmethodID idGetPhase = env->GetMethodID(detuneCls, "getPhaseShift", "(I)F");
 
     auto enabled = static_cast<bool>(env->GetBooleanField(oscillator, idEnabled));
     jobject shape = env->GetObjectField(oscillator, idShape);
@@ -67,11 +66,7 @@ static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator
     if (detuneObj) {
         auto unisonVoices = static_cast<int>(env->GetIntField(detuneObj, idUnisonVoices));
         auto detuneValue = static_cast<float>(env->GetFloatField(detuneObj, idDetuneValue));
-        auto detune = osc->setDetune(unisonVoices, detuneValue);
-        for (int voice = 0; voice < unisonVoices; voice++) {
-            auto phaseShift = env->CallFloatMethod(detuneObj, idGetPhase, voice);
-            detune.setPhaseShift(voice, phaseShift);
-        }
+        osc->setDetune(unisonVoices, detuneValue);
     }
 
     inst.addOscillator(std::move(osc));

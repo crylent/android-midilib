@@ -17,15 +17,11 @@ public:
 
     Detune& setUnisonVoices(uint8_t unisonVoices);
     Detune& setDetune(float detune);
-    Detune& setPhaseShift(uint8_t voice, float shift);
-
-    [[maybe_unused]] float getPhaseShift(uint8_t voice);
 
 private:
     Oscillator& mOwner;
     uint8_t mUnisonVoices = 2;
     float mDetune = 0.005;
-    vector<float> mPhases;
 };
 
 
