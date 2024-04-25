@@ -1,39 +1,40 @@
 package com.crylent.midilib.instrument
 
 import android.content.Context
-import com.crylent.midilib.AssetLoader
+import com.crylent.midilib.Sample
+import com.crylent.midilib.SampleLoader
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class AssetInstrument: Instrument(0, 0, 1, 0), AssetLoader {
+open class Sampler: Instrument(0, 0, 1, 0), SampleLoader {
 
-    private val assets = mutableListOf<Asset>()
+    private val samples = mutableListOf<Sample>()
 
-    val assetsList get() = assets.toList()
+    val samplesList get() = samples.toList()
 
-    override fun loadAsset(context: Context, asset: Asset) {
-        if (asset.note < 0) throw IllegalArgumentException("Note is not specified")
-        assets.add(asset)
+    override fun loadSample(context: Context, sample: Sample) {
+        if (sample.note < 0) throw IllegalArgumentException("Note is not specified")
+        samples.add(sample)
         addOnCreatedListener {
-            val bytes = asset.readBytes(context)
-            externalLoadAsset(bytes, bytes.size, asset.note)
+            val bytes = sample.readBytes(context)
+            externalLoadAsset(bytes, bytes.size, sample.note)
         }
     }
 
     private external fun externalLoadAsset(wavData: ByteArray, dataSize: Int, note: Byte)
     external fun copyAssetToRange(baseNote: Byte, min: Byte, max: Byte)
 
-    override fun clone() = AssetInstrument()
+    override fun clone() = Sampler()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is AssetInstrument) return false
+        if (other !is Sampler) return false
 
-        if (assets != other.assets) return false
+        if (samples != other.samples) return false
 
         return true
     }
 
-    override fun hashCode() = assets.hashCode()
+    override fun hashCode() = samples.hashCode()
 
     enum class ResamplingQuality {
         SINC_BEST_QUALITY,

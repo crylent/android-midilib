@@ -1,11 +1,11 @@
-#include "AssetInstrument.h"
+#include "Sampler.h"
 
 #include <utility>
 #include "../AudioEngine.h"
 #include "../NoteFrequency.h"
 #include "../Assets.h"
 
-float AssetInstrument::sample(double time, int8_t note) {
+float Sampler::sample(double time, int8_t note) {
     auto& data = mSamples[note];
     if (!data.empty()) {
         auto i = (size_t) round(time / AudioEngine::getTimeIncrement());
@@ -14,7 +14,7 @@ float AssetInstrument::sample(double time, int8_t note) {
     return .0f;
 }
 
-void AssetInstrument::loadAsset(int8_t note, vector<uint8_t>& wavData) {
+void Sampler::loadAsset(int8_t note, vector<uint8_t>& wavData) {
     uint32_t sampleRate;
     vector<float> samples;
     Assets::loadWavData(wavData, samples, sampleRate);
@@ -26,7 +26,7 @@ void AssetInstrument::loadAsset(int8_t note, vector<uint8_t>& wavData) {
     }
 }
 
-void AssetInstrument::copySampleToRange(int8_t baseNote, int8_t min, int8_t max) {
+void Sampler::copySampleToRange(int8_t baseNote, int8_t min, int8_t max) {
     for (int8_t note = min; note <= max && note > 0; note++) {
         if (note == baseNote) continue;
         double ratio = NoteFrequency::get(baseNote) / NoteFrequency::get(note);
@@ -34,7 +34,7 @@ void AssetInstrument::copySampleToRange(int8_t baseNote, int8_t min, int8_t max)
     }
 }
 
-void AssetInstrument::resampleAndAssign(vector<float> &dataIn, double ratio, int8_t note) {
+void Sampler::resampleAndAssign(vector<float> &dataIn, double ratio, int8_t note) {
     vector<float> dataOut;
     Assets::resample(dataIn, dataOut, ratio);
     mSamples[note] = dataOut;

@@ -36,8 +36,8 @@ add_library(
         player/WavePlayer.cpp
         Wave.cpp
         instrument/Instrument.cpp
-        instrument/SynthInstrument.cpp
-        instrument/AssetInstrument.cpp
+        instrument/Synthesizer.cpp
+        instrument/Sampler.cpp
         instrument/InstrumentLib.cpp
         Channel.cpp
         NoteFrequency.cpp

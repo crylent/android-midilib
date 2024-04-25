@@ -1,7 +1,7 @@
 #include "AudioEngine.h"
 #include "log.h"
-#include "instrument/SynthInstrument.h"
-#include "instrument/AssetInstrument.h"
+#include "instrument/Synthesizer.h"
+#include "instrument/Sampler.h"
 #include "oscillators/SawtoothOscillator.h"
 
 shared_ptr<oboe::AudioStream> AudioEngine::mStream;
@@ -41,7 +41,7 @@ Result AudioEngine::start() {
     lock_guard<mutex> lockGuard(mLock);
 
     if (getChannels().empty()) {
-        auto defaultSynth = make_shared<SynthInstrument>();
+        auto defaultSynth = make_shared<Synthesizer>();
         defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
         defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
         defaultSynth->getOscillatorByIndex(0).setDetune();

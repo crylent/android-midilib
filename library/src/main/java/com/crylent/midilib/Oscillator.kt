@@ -2,9 +2,8 @@ package com.crylent.midilib
 
 import android.content.Context
 import android.util.Log
-import com.crylent.midilib.instrument.Asset
 import com.crylent.midilib.instrument.Instrument
-import com.crylent.midilib.instrument.SynthInstrument
+import com.crylent.midilib.instrument.Synthesizer
 import kotlin.math.log2
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -15,7 +14,7 @@ class Oscillator(
     amplitude: Number = 1f,
     phase: Number = 0f,
     frequencyFactor: Number = 1f
-): Cloneable, AssetLoader {
+): Cloneable, SampleLoader {
     var enabled = true
         set(value) {
             field = value
@@ -71,15 +70,15 @@ class Oscillator(
 
     private var usePitch = false
 
-    private var asset: Asset? = null
+    private var sample: Sample? = null
     private var context: Context? = null
 
-    override fun loadAsset(context: Context, asset: Asset) {
+    override fun loadSample(context: Context, sample: Sample) {
         if (shape != Shape.CUSTOM)
             throw UnsupportedOperationException("loadAsset is available only for custom shape")
-        if (asset.note != Asset.NOTE_AUTO)
+        if (sample.note != Sample.NOTE_AUTO)
             Log.w("MidiLib", "Note is unused")
-        this.asset = asset
+        this.sample = sample
         this.context = context
         ifOwnerIsLinkedToLib {
             loadWaveform()
@@ -88,8 +87,8 @@ class Oscillator(
 
 
     fun loadWaveform() {
-        if (asset == null || context == null) return
-        val bytes = asset!!.readBytes(context!!)
+        if (sample == null || context == null) return
+        val bytes = sample!!.readBytes(context!!)
         loadWaveform(bytes, bytes.size)
     }
 
@@ -98,7 +97,7 @@ class Oscillator(
     var detune: Detune? = null
         private set
 
-    internal var owner: SynthInstrument? = null
+    internal var owner: Synthesizer? = null
     val ownerLibIndex get() = owner?.libIndex ?: -1
     val oscIndex get() = owner?.getOscillatorIndex(this) ?: -1
 
@@ -141,7 +140,7 @@ class Oscillator(
         }
     }
 
-    private fun ifOwnerIsLinkedToLib(lambda: (owner: SynthInstrument)->Unit) {
+    private fun ifOwnerIsLinkedToLib(lambda: (owner: Synthesizer)->Unit) {
         if (owner != null && owner!!.libIndex != Instrument.NO_INDEX) lambda(owner!!)
     }
 

@@ -1,5 +1,6 @@
 package com.crylent.midilib.instrument
 
+@Suppress("unused")
 abstract class Instrument(
     attack: Number,
     decay: Number,
@@ -90,8 +91,8 @@ abstract class Instrument(
     private external fun externalSetDecaySharpness(value: Float)
     private external fun externalSetReleaseSharpness(value: Float)
 
-    fun asAssetInstrument() = this as AssetInstrument
-    fun asSynthInstrument() = this as SynthInstrument
+    fun asSampler() = this as Sampler
+    fun asSynthesizer() = this as Synthesizer
 
     public abstract override fun clone(): Instrument
 

@@ -2,7 +2,7 @@
 #define CUSTOM_OSCILLATOR_H
 
 #include "Oscillator.h"
-#include "../instrument/AssetInstrument.h"
+#include "../instrument/Sampler.h"
 
 class CustomOscillator: public Oscillator {
     using Oscillator::Oscillator;

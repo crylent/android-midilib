@@ -3,7 +3,7 @@ package com.crylent.midilib.instrument
 import com.crylent.midilib.Oscillator
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class SynthInstrument(
+class Synthesizer(
     attack: Number = 0f,
     decay: Number = 5f,
     sustain: Number = 0f,
@@ -77,7 +77,7 @@ class SynthInstrument(
     private external fun externalEnableOscillator(index: Int)
     private external fun externalDisableOscillator(index: Int)
 
-    override fun clone() = SynthInstrument(
+    override fun clone() = Synthesizer(
         attack, decay, sustain, release,
         attackSharpness, decaySharpness, releaseSharpness,
         oscillators
@@ -85,7 +85,7 @@ class SynthInstrument(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is SynthInstrument) return false
+        if (other !is Synthesizer) return false
 
         if (oscillators != other.oscillators) return false
 

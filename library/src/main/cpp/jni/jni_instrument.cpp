@@ -1,8 +1,8 @@
 #include "jni.h"
 #include "jni_instrument_functions.cpp"
 #include "../instrument/InstrumentLib.h"
-#include "../instrument/SynthInstrument.h"
-#include "../instrument/AssetInstrument.h"
+#include "../instrument/Synthesizer.h"
+#include "../instrument/Sampler.h"
 #include "../oscillators/SineOscillator.h"
 #include "../oscillators/TriangleOscillator.h"
 #include "../oscillators/SquareOscillator.h"
@@ -11,20 +11,19 @@
 #include "../Assets.h"
 #include "../log.h"
 
-#define GET_SYNTH(index) (dynamic_cast<SynthInstrument&>(*InstrumentLib::getInstrument(index)))
+#define GET_SYNTH(index) (dynamic_cast<Synthesizer&>(*InstrumentLib::getInstrument(index)))
 
-#define SYNTH_INSTRUMENT 0
-#define ASSET_INSTRUMENT 1
+#define INSTRUMENT_SYNTHESIZER 0
+#define INSTRUMENT_SAMPLER 1
 
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_crylent_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobject thiz) {
     jclass instCls = env->GetObjectClass(thiz);
-    jclass synthInstCls = env->FindClass("com/crylent/midilib/instrument/SynthInstrument");
-    jclass assetInstCls = env->FindClass("com/crylent/midilib/instrument/AssetInstrument");
+    jclass synthInstCls = env->FindClass("com/crylent/midilib/instrument/Synthesizer");
     uint8_t instType;
-    if (env->IsInstanceOf(thiz, synthInstCls)) instType = SYNTH_INSTRUMENT;
-    else instType = ASSET_INSTRUMENT;
+    if (env->IsInstanceOf(thiz, synthInstCls)) instType = INSTRUMENT_SYNTHESIZER;
+    else instType = INSTRUMENT_SAMPLER;
 
 #define GET_FIELD(field) jfieldID id_##field = env->GetFieldID(instCls, #field, "F"); \
 jfloat field = env->GetFloatField(thiz, id_##field)
@@ -41,11 +40,11 @@ jfloat field = env->GetFloatField(thiz, id_##field)
 
     uint32_t position;
 
-    if (instType == SYNTH_INSTRUMENT) {
-        jmethodID idAsSynthInst = env->GetMethodID(instCls, "asSynthInstrument",
-                                                   "()Lcom/crylent/midilib/instrument/SynthInstrument;");
+    if (instType == INSTRUMENT_SYNTHESIZER) {
+        jmethodID idAsSynthInst = env->GetMethodID(instCls, "asSynthesizer",
+                                                   "()Lcom/crylent/midilib/instrument/Synthesizer;");
         thiz = env->CallObjectMethod(thiz, idAsSynthInst);
-        auto inst = make_shared<SynthInstrument>(
+        auto inst = make_shared<Synthesizer>(
                 attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
         jmethodID idOscCount = env->GetMethodID(synthInstCls, "getOscCount", "()I");
         jint oscillatorsCount = env->CallIntMethod(thiz, idOscCount);
@@ -59,10 +58,7 @@ jfloat field = env->GetFloatField(thiz, id_##field)
         }
         position = InstrumentLib::addInstrument(inst);
     } else {
-        jmethodID idAsAssetInst = env->GetMethodID(instCls, "asAssetInstrument",
-                                                   "()Lcom/crylent/midilib/instrument/AssetInstrument;");
-        thiz = env->CallObjectMethod(thiz, idAsAssetInst);
-        auto inst = make_shared<AssetInstrument>(
+        auto inst = make_shared<Sampler>(
                 attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
         position = InstrumentLib::addInstrument(inst);
     }
@@ -73,8 +69,8 @@ jfloat field = env->GetFloatField(thiz, id_##field)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_SynthInstrument_externalAddOscillator(JNIEnv *env, jobject thiz,
-                                                                          jobject oscillator) {
+Java_com_crylent_midilib_instrument_Synthesizer_externalAddOscillator(JNIEnv *env, jobject thiz,
+                                                                      jobject oscillator) {
     int32_t index = getLibIndex(env, thiz);
     auto& inst = GET_SYNTH(index);
     addOscillator(env, inst, oscillator);
@@ -82,9 +78,9 @@ Java_com_crylent_midilib_instrument_SynthInstrument_externalAddOscillator(JNIEnv
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_SynthInstrument_externalRemoveOscillator(JNIEnv *env,
-                                                                             jobject thiz,
-                                                                             jint index) {
+Java_com_crylent_midilib_instrument_Synthesizer_externalRemoveOscillator(JNIEnv *env,
+                                                                         jobject thiz,
+                                                                         jint index) {
     int32_t instIndex = getLibIndex(env, thiz);
     auto& inst = GET_SYNTH(instIndex);
     inst.removeOscillator(index);
@@ -92,8 +88,8 @@ Java_com_crylent_midilib_instrument_SynthInstrument_externalRemoveOscillator(JNI
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_SynthInstrument_externalEnableOscillator(JNIEnv *env, jobject thiz,
-                                                                             jint index) {
+Java_com_crylent_midilib_instrument_Synthesizer_externalEnableOscillator(JNIEnv *env, jobject thiz,
+                                                                         jint index) {
     int32_t instIndex = getLibIndex(env, thiz);
     auto& inst = GET_SYNTH(instIndex);
     inst.enableOscillator(index);
@@ -101,8 +97,8 @@ Java_com_crylent_midilib_instrument_SynthInstrument_externalEnableOscillator(JNI
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_SynthInstrument_externalDisableOscillator(JNIEnv *env, jobject thiz,
-                                                                              jint index) {
+Java_com_crylent_midilib_instrument_Synthesizer_externalDisableOscillator(JNIEnv *env, jobject thiz,
+                                                                          jint index) {
     int32_t instIndex = getLibIndex(env, thiz);
     auto& inst = GET_SYNTH(instIndex);
     inst.disableOscillator(index);
@@ -220,39 +216,39 @@ Java_com_crylent_midilib_Oscillator_externalSetDetuneLevel(JNIEnv *env, jobject 
 
 #undef OSC_FUNCTION_BEGIN
 #undef GET_SYNTH
-#undef SYNTH_INSTRUMENT
+#undef INSTRUMENT_SYNTHESIZER
 
-#define GET_AINST(index) (dynamic_cast<AssetInstrument&>(*InstrumentLib::getInstrument(index)))
+#define GET_SAMPLER(index) (dynamic_cast<Sampler&>(*InstrumentLib::getInstrument(index)))
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_AssetInstrument_externalLoadAsset(JNIEnv *env, jobject thiz,
-                                                                      jbyteArray wav_data,
-                                                                      jint data_size, jbyte note) {
+Java_com_crylent_midilib_instrument_Sampler_externalLoadAsset(JNIEnv *env, jobject thiz,
+                                                              jbyteArray wav_data,
+                                                              jint data_size, jbyte note) {
     int32_t index = getLibIndex(env, thiz);
     auto array = env->GetByteArrayElements(wav_data, nullptr);
     auto data = vector<uint8_t>(array, array + data_size);
-    auto& inst = GET_AINST(index);
+    auto& inst = GET_SAMPLER(index);
     inst.loadAsset(note, data);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_AssetInstrument_copyAssetToRange(JNIEnv *env, jobject thiz,
-                                                                     jbyte baseNote,
-                                                                     jbyte min, jbyte max) {
+Java_com_crylent_midilib_instrument_Sampler_copyAssetToRange(JNIEnv *env, jobject thiz,
+                                                             jbyte baseNote,
+                                                             jbyte min, jbyte max) {
     int32_t index = getLibIndex(env, thiz);
-    auto& inst = GET_AINST(index);
+    auto& inst = GET_SAMPLER(index);
     inst.copySampleToRange(baseNote, min, max);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_AssetInstrument_00024Companion_externalSetResamplingQuality(
+Java_com_crylent_midilib_instrument_Sampler_00024Companion_externalSetResamplingQuality(
         [[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jint quality) {
     Assets::setResamplingQuality(quality);
 }
 
-#undef GET_AINST
-#undef ASSET_INSTRUMENT
+#undef GET_SAMPLER
+#undef INSTRUMENT_SAMPLER
 #undef NO_INDEX

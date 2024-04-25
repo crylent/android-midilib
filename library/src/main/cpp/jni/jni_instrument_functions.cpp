@@ -1,5 +1,5 @@
 #include "jni.h"
-#include "../instrument/SynthInstrument.h"
+#include "../instrument/Synthesizer.h"
 #include "../oscillators/SineOscillator.h"
 #include "../oscillators/TriangleOscillator.h"
 #include "../oscillators/SquareOscillator.h"
@@ -33,7 +33,7 @@ static unique_ptr<Oscillator> makeOscillator(int shapeOrdinal, float amplitude, 
     }
 }
 
-static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator) {
+static void addOscillator(JNIEnv *env, Synthesizer& inst, jobject oscillator) {
     jclass oscCls = env->GetObjectClass(oscillator);
 
     jfieldID idEnabled = env->GetFieldID(oscCls, "enabled", "Z");

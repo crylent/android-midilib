@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class SynthInstrument : public Instrument {
+class Synthesizer : public Instrument {
 public:
     using Instrument::Instrument;
 

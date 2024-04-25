@@ -1,12 +1,12 @@
-#ifndef ASSET_INSTRUMENT_H
-#define ASSET_INSTRUMENT_H
+#ifndef SAMPLER_H
+#define SAMPLER_H
 
 #include <vector>
 #include "Instrument.h"
 
 using namespace std;
 
-class AssetInstrument : public Instrument {
+class Sampler : public Instrument {
 public:
     using Instrument::Instrument;
 
@@ -22,4 +22,4 @@ private:
 };
 
 
-#endif //ASSET_INSTRUMENT_H
+#endif //SAMPLER_H
