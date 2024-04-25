@@ -3,6 +3,7 @@
 #include "../AudioEngine.h"
 #include "../Assets.h"
 #include "../NoteFrequency.h"
+#include "../log.h"
 
 float CustomOscillator::evalVoice(double time, float frequency) {
     if (!mSamples) return sinf(calcPhase(time, frequency));
@@ -12,8 +13,9 @@ float CustomOscillator::evalVoice(double time, float frequency) {
     float left = mSamples->at(i), right;
     if (i + 1 < mSamplesNum) right = mSamples->at(i + 1);
     else right = mSamples->at(0);
-    float interPoint = remainderf(point, 1);
-    return left + (right - left) * interPoint; // linear interpolation
+    float integral;
+    float fractional = modf(point, &integral);
+    return left + (right - left) * fractional; // linear interpolation
 }
 
 CustomOscillator::CustomOscillator(Oscillator &other) {
