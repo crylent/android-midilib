@@ -1,59 +1,15 @@
 package com.crylent.midilib.instrument
 
-@Suppress("unused")
-abstract class Instrument(
-    attack: Number,
-    decay: Number,
-    sustain: Number,
-    release: Number,
-    attackSharpness: Number = 1f,
-    decaySharpness: Number = 1f,
-    releaseSharpness: Number = 1f
-): Cloneable {
+import com.crylent.midilib.envelope.Envelope
+
+@Suppress("unused", "LeakingThis")
+abstract class Instrument(val envelope: Envelope): Cloneable {
     /** Optional - not used in library, but can be assigned for convenience **/
     var name = ""
 
-    var attack = attack.toFloat()
-        set(value) {
-            field = value
-            externalSetAttack(value)
-        }
-
-    var decay = decay.toFloat()
-        set(value) {
-            field = value
-            externalSetDecay(value)
-        }
-
-    var sustain = sustain.toFloat()
-        set(value) {
-            field = value
-            externalSetSustain(value)
-        }
-
-    var release = release.toFloat()
-        set(value) {
-            field = value
-            externalSetRelease(value)
-        }
-
-    var attackSharpness = attackSharpness.toFloat()
-        set(value) {
-            field = value
-            externalSetAttackSharpness(value)
-        }
-
-    var decaySharpness = decaySharpness.toFloat()
-        set(value) {
-            field = value
-            externalSetDecaySharpness(value)
-        }
-
-    var releaseSharpness = releaseSharpness.toFloat()
-        set(value) {
-            field = value
-            externalSetReleaseSharpness(value)
-        }
+    init {
+        envelope.owner = this
+    }
 
     internal var libIndex: Int = NO_INDEX
         private set
@@ -82,14 +38,6 @@ abstract class Instrument(
 
     private external fun externalCreate(): Int
     private external fun externalAssignToChannel(channel: Byte)
-
-    private external fun externalSetAttack(value: Float)
-    private external fun externalSetDecay(value: Float)
-    private external fun externalSetSustain(value: Float)
-    private external fun externalSetRelease(value: Float)
-    private external fun externalSetAttackSharpness(value: Float)
-    private external fun externalSetDecaySharpness(value: Float)
-    private external fun externalSetReleaseSharpness(value: Float)
 
     fun asSampler() = this as Sampler
     fun asSynthesizer() = this as Synthesizer

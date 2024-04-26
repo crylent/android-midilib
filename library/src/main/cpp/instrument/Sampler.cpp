@@ -11,7 +11,7 @@ float Sampler::sample(double time, int8_t note) {
         auto i = (size_t) round(time / AudioEngine::getTimeIncrement());
         if (i < data.size()) return data[i];
     }
-    return .0f;
+    return NAN;
 }
 
 void Sampler::loadAsset(int8_t note, vector<uint8_t>& wavData) {

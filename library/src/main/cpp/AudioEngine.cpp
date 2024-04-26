@@ -3,6 +3,7 @@
 #include "instrument/Synthesizer.h"
 #include "instrument/Sampler.h"
 #include "oscillators/SawtoothOscillator.h"
+#include "envelope/ADSREnvelope.h"
 
 shared_ptr<oboe::AudioStream> AudioEngine::mStream;
 mutex AudioEngine::mLock;
@@ -41,8 +42,8 @@ Result AudioEngine::start() {
     lock_guard<mutex> lockGuard(mLock);
 
     if (getChannels().empty()) {
-        auto defaultSynth = make_shared<Synthesizer>();
-        defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
+        auto envelope = make_unique<ADSREnvelope>();
+        auto defaultSynth = make_shared<Synthesizer>(std::move(envelope));
         defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
         defaultSynth->getOscillatorByIndex(0).setDetune();
         initChannels(defaultSynth);

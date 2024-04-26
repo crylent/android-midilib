@@ -84,7 +84,7 @@ static int32_t getLibIndex(JNIEnv *env, jobject thiz) {
 }
 
 static int32_t getOwnerLibIndex(JNIEnv *env, jobject osc) {
-    jclass cls = env->FindClass("com/crylent/midilib/Oscillator");
+    jclass cls = env->FindClass("com/crylent/midilib/InstrumentComponent");
     jmethodID idOwnerLibIndex = env->GetMethodID(cls, "getOwnerLibIndex", "()I");
     return env->CallIntMethod(osc, idOwnerLibIndex);
 }

@@ -2,8 +2,6 @@ package com.crylent.midilib
 
 import android.content.Context
 import android.util.Log
-import com.crylent.midilib.instrument.Instrument
-import com.crylent.midilib.instrument.Synthesizer
 import kotlin.math.log2
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -14,13 +12,14 @@ class Oscillator(
     amplitude: Number = 1f,
     phase: Number = 0f,
     frequencyFactor: Number = 1f
-): Cloneable, SampleLoader {
+): Cloneable, SampleLoader, InstrumentComponent() {
     var enabled = true
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
-                if (value) it.enableOscillator(this)
-                else it.disableOscillator(this)
+                val synth = it.asSynthesizer()
+                if (value) synth.enableOscillator(this)
+                else synth.disableOscillator(this)
             }
         }
 
@@ -97,9 +96,7 @@ class Oscillator(
     var detune: Detune? = null
         private set
 
-    internal var owner: Synthesizer? = null
-    val ownerLibIndex get() = owner?.libIndex ?: -1
-    val oscIndex get() = owner?.getOscillatorIndex(this) ?: -1
+    val oscIndex get() = owner?.asSynthesizer()?.getOscillatorIndex(this) ?: -1
 
     enum class Shape {
         SINE, TRIANGLE, SQUARE, SAW, REVERSE_SAW, CUSTOM
@@ -138,10 +135,6 @@ class Oscillator(
         ifOwnerIsLinkedToLib {
             externalDisableDetune()
         }
-    }
-
-    private fun ifOwnerIsLinkedToLib(lambda: (owner: Synthesizer)->Unit) {
-        if (owner != null && owner!!.libIndex != Instrument.NO_INDEX) lambda(owner!!)
     }
 
     private external fun externalSetShape(shape: Int)

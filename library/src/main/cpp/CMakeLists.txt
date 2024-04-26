@@ -39,6 +39,9 @@ add_library(
         instrument/Synthesizer.cpp
         instrument/Sampler.cpp
         instrument/InstrumentLib.cpp
+        envelope/Envelope.cpp
+        envelope/ADSREnvelope.cpp
+        envelope/ReleaseOnlyEnvelope.cpp
         Channel.cpp
         NoteFrequency.cpp
         Assets.cpp

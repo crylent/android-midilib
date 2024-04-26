@@ -23,6 +23,7 @@ public:
         mOscillators[index] = make_unique<Shape>(*mOscillators[index]);
     }
 
+protected:
     float sample(double time, int8_t note) override;
 
 private:

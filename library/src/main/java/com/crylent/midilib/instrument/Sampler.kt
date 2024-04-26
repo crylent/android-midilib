@@ -3,9 +3,10 @@ package com.crylent.midilib.instrument
 import android.content.Context
 import com.crylent.midilib.Sample
 import com.crylent.midilib.SampleLoader
+import com.crylent.midilib.envelope.Envelope
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class Sampler: Instrument(0, 0, 1, 0), SampleLoader {
+open class Sampler(envelope: Envelope): Instrument(envelope), SampleLoader {
 
     private val samples = mutableListOf<Sample>()
 
@@ -23,7 +24,7 @@ open class Sampler: Instrument(0, 0, 1, 0), SampleLoader {
     private external fun externalLoadAsset(wavData: ByteArray, dataSize: Int, note: Byte)
     external fun copyAssetToRange(baseNote: Byte, min: Byte, max: Byte)
 
-    override fun clone() = Sampler()
+    override fun clone() = Sampler(envelope.clone())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

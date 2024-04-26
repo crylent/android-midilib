@@ -3,6 +3,8 @@
 #include "../instrument/InstrumentLib.h"
 #include "../instrument/Synthesizer.h"
 #include "../instrument/Sampler.h"
+#include "../envelope/ADSREnvelope.h"
+#include "../envelope/ReleaseOnlyEnvelope.h"
 #include "../oscillators/SineOscillator.h"
 #include "../oscillators/TriangleOscillator.h"
 #include "../oscillators/SquareOscillator.h"
@@ -25,17 +27,43 @@ Java_com_crylent_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobje
     if (env->IsInstanceOf(thiz, synthInstCls)) instType = INSTRUMENT_SYNTHESIZER;
     else instType = INSTRUMENT_SAMPLER;
 
-#define GET_FIELD(field) jfieldID id_##field = env->GetFieldID(instCls, #field, "F"); \
-jfloat field = env->GetFloatField(thiz, id_##field)
+    jmethodID idGetEnvelope = env->GetMethodID(instCls, "getEnvelope",
+                                               "()Lcom/crylent/midilib/envelope/Envelope;");
+    jobject envelopeObj = env->CallObjectMethod(thiz, idGetEnvelope);
+    jclass envelopeCls = env->GetObjectClass(envelopeObj);
+    jmethodID idEnvelopeType = env->GetMethodID(envelopeCls, "getTypeId", "()I");
+    jint envelopeType = env->CallIntMethod(envelopeObj, idEnvelopeType);
+    unique_ptr<Envelope> envelope;
 
-    GET_FIELD(attack);
-    GET_FIELD(decay);
-    GET_FIELD(sustain);
-    GET_FIELD(release);
-    GET_FIELD(attackSharpness);
-    GET_FIELD(decaySharpness);
-    GET_FIELD(releaseSharpness);
+#define GET_FIELD(field) jfieldID id_##field = env->GetFieldID(envelopeCls, #field, "F"); \
+jfloat field = env->GetFloatField(envelopeObj, id_##field)
 
+#define ENVELOPE_ADSR 0
+#define ENVELOPE_RELEASE_ONLY 1
+    switch (envelopeType) {
+        case 0: {
+            GET_FIELD(attack);
+            GET_FIELD(decay);
+            GET_FIELD(sustain);
+            GET_FIELD(release);
+            GET_FIELD(attackSharpness);
+            GET_FIELD(decaySharpness);
+            GET_FIELD(releaseSharpness);
+            envelope = make_unique<ADSREnvelope>(attack, decay, sustain, release,
+                                                 attackSharpness, decaySharpness, releaseSharpness);
+            break;
+        }
+        case 1: {
+            GET_FIELD(release);
+            GET_FIELD(releaseSharpness);
+            envelope = make_unique<ReleaseOnlyEnvelope>(release, releaseSharpness);
+            break;
+        }
+        default:
+            throw std::runtime_error("Unexpected envelope type");
+    }
+#undef ENVELOPE_ADSR
+#undef ENVELOPE_RELEASE_ONLY
 #undef GET_FIELD
 
     uint32_t position;
@@ -44,8 +72,7 @@ jfloat field = env->GetFloatField(thiz, id_##field)
         jmethodID idAsSynthInst = env->GetMethodID(instCls, "asSynthesizer",
                                                    "()Lcom/crylent/midilib/instrument/Synthesizer;");
         thiz = env->CallObjectMethod(thiz, idAsSynthInst);
-        auto inst = make_shared<Synthesizer>(
-                attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
+        auto inst = make_shared<Synthesizer>(std::move(envelope));
         jmethodID idOscCount = env->GetMethodID(synthInstCls, "getOscCount", "()I");
         jint oscillatorsCount = env->CallIntMethod(thiz, idOscCount);
 
@@ -58,8 +85,7 @@ jfloat field = env->GetFloatField(thiz, id_##field)
         }
         position = InstrumentLib::addInstrument(inst);
     } else {
-        auto inst = make_shared<Sampler>(
-                attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
+        auto inst = make_shared<Sampler>(std::move(envelope));
         position = InstrumentLib::addInstrument(inst);
     }
     return (jint) position;
@@ -113,22 +139,23 @@ Java_com_crylent_midilib_instrument_Instrument_externalAssignToChannel(JNIEnv *e
             );
 }
 
-#define PARAM_SETTER(param) extern "C" JNIEXPORT void JNICALL \
-Java_com_crylent_midilib_instrument_Instrument_externalSet##param \
+#define PARAM_SETTER(envelope, param) extern "C" JNIEXPORT void JNICALL \
+Java_com_crylent_midilib_envelope_##envelope##_externalSet##param \
 (JNIEnv *env, jobject thiz, jfloat value) {\
-    int32_t index = getLibIndex(env, thiz);\
+    int32_t index = getOwnerLibIndex(env, thiz);\
     if (index != NO_INDEX) {\
-        InstrumentLib::getInstrument(index)->set##param(value);\
+        auto& envelope = dynamic_cast<class envelope&>(InstrumentLib::getInstrument(index)->getEnvelope());\
+        envelope.set##param(value);\
     }\
 }
 
-PARAM_SETTER(Attack)
-PARAM_SETTER(Decay)
-PARAM_SETTER(Sustain)
-PARAM_SETTER(Release)
-PARAM_SETTER(AttackSharpness)
-PARAM_SETTER(DecaySharpness)
-PARAM_SETTER(ReleaseSharpness)
+PARAM_SETTER(ADSREnvelope, Attack)
+PARAM_SETTER(ADSREnvelope, Decay)
+PARAM_SETTER(ADSREnvelope, Sustain)
+PARAM_SETTER(ReleaseOnlyEnvelope, Release)
+PARAM_SETTER(ADSREnvelope, AttackSharpness)
+PARAM_SETTER(ADSREnvelope, DecaySharpness)
+PARAM_SETTER(ReleaseOnlyEnvelope, ReleaseSharpness)
 
 #undef PARAM_SETTER
 
@@ -242,13 +269,13 @@ Java_com_crylent_midilib_instrument_Sampler_copyAssetToRange(JNIEnv *env, jobjec
     inst.copySampleToRange(baseNote, min, max);
 }
 
+#undef GET_SAMPLER
+#undef INSTRUMENT_SAMPLER
+#undef NO_INDEX
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_crylent_midilib_instrument_Sampler_00024Companion_externalSetResamplingQuality(
         [[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jint quality) {
     Assets::setResamplingQuality(quality);
 }
-
-#undef GET_SAMPLER
-#undef INSTRUMENT_SAMPLER
-#undef NO_INDEX

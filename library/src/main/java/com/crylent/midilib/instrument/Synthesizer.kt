@@ -1,18 +1,13 @@
 package com.crylent.midilib.instrument
 
 import com.crylent.midilib.Oscillator
+import com.crylent.midilib.envelope.Envelope
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class Synthesizer(
-    attack: Number = 0f,
-    decay: Number = 5f,
-    sustain: Number = 0f,
-    release: Number = 0f,
-    attackSharpness: Number = 1f,
-    decaySharpness: Number = 1f,
-    releaseSharpness: Number = 1f,
+    envelope: Envelope,
     private val oscillators: MutableList<Oscillator> = mutableListOf()
-): Instrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness) {
+): Instrument(envelope) {
 
     fun addDefaultOscillator(): Int {
         return addOscillator(Oscillator(Oscillator.Shape.SINE))
@@ -77,11 +72,7 @@ class Synthesizer(
     private external fun externalEnableOscillator(index: Int)
     private external fun externalDisableOscillator(index: Int)
 
-    override fun clone() = Synthesizer(
-        attack, decay, sustain, release,
-        attackSharpness, decaySharpness, releaseSharpness,
-        oscillators
-    )
+    override fun clone() = Synthesizer(envelope.clone(), oscillators.toMutableList())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
