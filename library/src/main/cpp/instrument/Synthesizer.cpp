@@ -29,9 +29,3 @@ void Synthesizer::disableOscillator(uint8_t index) {
 void Synthesizer::removeOscillator(uint8_t index) {
     mOscillators.erase(mOscillators.begin() + index);
 }
-
-template<typename Shape> requires(is_base_of<Oscillator, Shape>() == true)
-void Synthesizer::setOscillatorShape(uint8_t index) {
-    // construct oscillator with the same parameters (using copyFrom method)
-    mOscillators[index] = make_unique<Shape>(*mOscillators[index]);
-}
