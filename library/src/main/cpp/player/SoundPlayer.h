@@ -9,16 +9,13 @@ using namespace std;
 
 class SoundPlayer {
 public:
-    virtual ~SoundPlayer() = default;
-
-    virtual void fillBuffer(float* buffer, size_t numFrames) = 0;
+    void fillBuffer(float* buffer, size_t numFrames);
 
     shared_ptr<FXList> getEffects();
 
-protected:
+private:
     float applyFX(float sample);
 
-private:
     shared_ptr<FXList> mEffects = make_shared<FXList>();
 };
 

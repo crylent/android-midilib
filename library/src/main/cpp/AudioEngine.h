@@ -3,7 +3,7 @@
 
 #include "oboe/Oboe.h"
 #include "AudioCallback.h"
-#include "player/WavePlayer.h"
+#include "player/SoundPlayer.h"
 #include "Channel.h"
 
 using namespace std;
@@ -28,6 +28,7 @@ public:
     static int32_t getBufferSize();
     static double getTimeIncrement();
 
+    static SoundPlayer& getPlayer();
     static FXList& getMasterFX();
 
     static vector<unique_ptr<Channel>>& getChannels();
@@ -44,6 +45,7 @@ public:
 #endif //TEST_LATENCY
 
 private:
+    static unique_ptr<SoundPlayer> mPlayer;
     static shared_ptr<oboe::AudioStream> mStream;
     static mutex mLock;
     static SharingMode mSharingMode;

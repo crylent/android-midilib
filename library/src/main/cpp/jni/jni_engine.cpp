@@ -62,7 +62,7 @@ Java_com_crylent_midilib_AudioEngine_renderWavExternal(JNIEnv *env, [[maybe_unus
     jfieldID idNote = env->GetFieldID(eventCls, "note", "B");
     jfieldID idAmplitude = env->GetFieldID(eventCls, "amplitude", "F");
 
-    auto player = WavePlayer();
+    auto& player = AudioEngine::getPlayer();
     auto wav = AudioFile<float>();
     wav.setSampleRate(AudioEngine::getSampleRate());
     wav.setBitDepth(32);

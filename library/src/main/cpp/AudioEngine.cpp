@@ -5,6 +5,7 @@
 #include "oscillators/SawtoothOscillator.h"
 #include "envelope/ADSREnvelope.h"
 
+unique_ptr<SoundPlayer> AudioEngine::mPlayer = make_unique<SoundPlayer>();
 shared_ptr<oboe::AudioStream> AudioEngine::mStream;
 mutex AudioEngine::mLock;
 SharingMode AudioEngine::mSharingMode = SharingMode::Exclusive;
@@ -49,9 +50,8 @@ Result AudioEngine::start() {
         initChannels(defaultSynth);
     }
 
-    auto player = make_unique<WavePlayer>();
-    mMasterEffects = player->getEffects();
-    auto* callback = new AudioCallback(std::move(player));
+    mMasterEffects = mPlayer->getEffects();
+    auto* callback = new AudioCallback(*mPlayer);
 
     AudioStreamBuilder builder;
     builder.setPerformanceMode(PerformanceMode::LowLatency)
@@ -224,6 +224,10 @@ uint8_t AudioEngine::getNumChannels() {
  */
 double AudioEngine::getTimeIncrement() {
     return mTimeIncrement;
+}
+
+SoundPlayer &AudioEngine::getPlayer() {
+    return *mPlayer;
 }
 
 FXList &AudioEngine::getMasterFX() {

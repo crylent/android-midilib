@@ -3,15 +3,11 @@
 #include "log.h"
 #include "AudioEngine.h"
 
-AudioCallback::AudioCallback(unique_ptr<SoundPlayer> player) {
-    mSoundPlayer = std::move(player);
-}
-
 DataCallbackResult AudioCallback::onAudioReady(
         AudioStream *audioStream, void *audioData, int32_t numFrames
         ) {
     auto* floatData = static_cast<float*>(audioData);
-    mSoundPlayer->fillBuffer(floatData, numFrames);
+    mSoundPlayer.fillBuffer(floatData, numFrames);
 
 #ifdef TEST_LATENCY
     AudioEngine::logLatency();
