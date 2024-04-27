@@ -74,7 +74,7 @@ class Oscillator(
 
     override fun loadSample(context: Context, sample: Sample) {
         if (shape != Shape.CUSTOM)
-            throw UnsupportedOperationException("loadAsset is available only for custom shape")
+            throw UnsupportedOperationException("loadSample is available only for custom shape")
         if (sample.note != Sample.NOTE_AUTO)
             Log.w("MidiLib", "Note is unused")
         this.sample = sample

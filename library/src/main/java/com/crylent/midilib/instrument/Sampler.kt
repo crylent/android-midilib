@@ -17,11 +17,11 @@ open class Sampler(envelope: Envelope): Instrument(envelope), SampleLoader {
         samples.add(sample)
         addOnCreatedListener {
             val bytes = sample.readBytes(context)
-            externalLoadAsset(bytes, bytes.size, sample.note)
+            externalLoadSample(bytes, bytes.size, sample.note)
         }
     }
 
-    private external fun externalLoadAsset(wavData: ByteArray, dataSize: Int, note: Byte)
+    private external fun externalLoadSample(wavData: ByteArray, dataSize: Int, note: Byte)
     external fun copyAssetToRange(baseNote: Byte, min: Byte, max: Byte)
 
     override fun clone() = Sampler(envelope.clone())

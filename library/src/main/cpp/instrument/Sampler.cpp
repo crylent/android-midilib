@@ -14,7 +14,7 @@ float Sampler::sample(double time, int8_t note) {
     return NAN;
 }
 
-void Sampler::loadAsset(int8_t note, vector<uint8_t>& wavData) {
+void Sampler::loadSample(int8_t note, vector<uint8_t>& wavData) {
     uint32_t sampleRate;
     vector<float> samples;
     Assets::loadWavData(wavData, samples, sampleRate);

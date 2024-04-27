@@ -10,7 +10,7 @@ class Sampler : public Instrument {
 public:
     using Instrument::Instrument;
 
-    void loadAsset(int8_t note, vector<uint8_t>& wavData);
+    void loadSample(int8_t note, vector<uint8_t>& wavData);
     void copySampleToRange(int8_t baseNote, int8_t min, int8_t max);
 
 protected:

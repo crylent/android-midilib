@@ -249,14 +249,14 @@ Java_com_crylent_midilib_Oscillator_externalSetDetuneLevel(JNIEnv *env, jobject 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_Sampler_externalLoadAsset(JNIEnv *env, jobject thiz,
-                                                              jbyteArray wav_data,
-                                                              jint data_size, jbyte note) {
+Java_com_crylent_midilib_instrument_Sampler_externalLoadSample(JNIEnv *env, jobject thiz,
+                                                               jbyteArray wav_data,
+                                                               jint data_size, jbyte note) {
     int32_t index = getLibIndex(env, thiz);
     auto array = env->GetByteArrayElements(wav_data, nullptr);
     auto data = vector<uint8_t>(array, array + data_size);
     auto& inst = GET_SAMPLER(index);
-    inst.loadAsset(note, data);
+    inst.loadSample(note, data);
 }
 
 extern "C"
