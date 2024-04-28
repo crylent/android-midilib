@@ -1,8 +1,7 @@
 package com.crylent.midilib
 
 import com.crylent.midilib.instrument.Instrument
-import com.crylent.midilib.soundfx.SoundFX
-import java.util.*
+import java.util.LinkedList
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object AudioEngine {
@@ -36,15 +35,11 @@ object AudioEngine {
     external fun noteOff(channel: Byte, note: Byte)
     external fun allNotesOff(channel: Byte)
 
+    external fun getNumberOfChannels(): Byte
+
     fun setInstrument(channel: Byte, instrument: Instrument) {
         instrument.assignToChannel(channel)
     }
-
-    fun addEffect(channel: Byte, fx: SoundFX) {
-        fx.assignToChannel(channel)
-    }
-
-    external fun clearEffects(channel: Byte)
 
     data class NoteEvent(val channel: Byte, val time: Long, val note: Byte, val amplitude: Float)
 

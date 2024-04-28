@@ -2,7 +2,9 @@ package com.crylent.midiapp
 
 import com.crylent.midilib.AudioEngine
 import com.crylent.midilib.Oscillator
-import com.crylent.midilib.instrument.SynthInstrument
+import com.crylent.midilib.envelope.ADSREnvelope
+import com.crylent.midilib.instrument.Synthesizer
+import com.crylent.midilib.soundfx.FXList
 import com.crylent.midilib.soundfx.Filter
 
 object Midi {
@@ -10,7 +12,7 @@ object Midi {
         AudioEngine.start()
     }
 
-    val instrument = SynthInstrument()
+    val instrument = Synthesizer(ADSREnvelope())
     val filter = Filter.simple(Filter.Type.LowPass, 1000f)
 
     init {
@@ -20,7 +22,7 @@ object Midi {
         instrument.addOscillator(Oscillator(Oscillator.Shape.SAW))
         instrument.addOscillator(Oscillator(Oscillator.Shape.REVERSE_SAW))
         instrument.addOscillator(Oscillator(Oscillator.Shape.SQUARE))
-        AudioEngine.addEffect(AudioEngine.MASTER, filter)
         filter.disable()
+        FXList.MasterFX.add(filter)
     }
 }

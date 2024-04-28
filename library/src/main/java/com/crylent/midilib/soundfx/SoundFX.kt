@@ -19,10 +19,12 @@ abstract class SoundFX: Cloneable {
     private var linkedChannel: Byte = NOT_LINKED
     private var fxIndex: Byte = NOT_LINKED
 
-    internal fun assignToChannel(channel: Byte) {
+    internal fun assignToChannel(channel: Byte, index: Byte = PUSH_BACK) {
         linkedChannel = channel
-        fxIndex = externalAssignToChannel(channel)
+        fxIndex = externalAssignToChannel(channel, index)
     }
+
+    internal fun assignToChannel(channel: Byte, index: Int) = assignToChannel(channel, index.toByte())
 
     protected fun updateParameter(param: String, value: Float) {
         if (linkedChannel != NOT_LINKED) {
@@ -35,12 +37,14 @@ abstract class SoundFX: Cloneable {
         }
     }
 
-    private external fun externalAssignToChannel(channel: Byte): Byte
+    private external fun externalAssignToChannel(channel: Byte, index: Byte): Byte
     private external fun externalEditEffect(param: String, value: Float)
     private external fun externalEditEffectInt(param: String, value: Int)
 
     companion object {
         const val NOT_LINKED: Byte = -2
+
+        const val PUSH_BACK: Byte = -1
 
         const val THRESHOLD = "threshold"
         const val LIMIT = "limit"

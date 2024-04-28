@@ -5,8 +5,6 @@
 #include "../soundfx/Limiter.h"
 #include "../soundfx/Filter.h"
 
-#define MASTER_CHANNEL -1
-
 #define LIMITER 1
 #define FILTER 2
 
@@ -16,7 +14,7 @@
 extern "C"
 JNIEXPORT jbyte JNICALL
 Java_com_crylent_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jobject thiz,
-                                                                 jbyte channel) {
+                                                                 jbyte channel, jbyte index) {
     jclass fxCls = env->GetObjectClass(thiz);
     jmethodID idGetId = env->GetMethodID(fxCls, "getId", "()I");
     auto fxId = static_cast<int>(env->CallIntMethod(thiz, idGetId));
@@ -54,17 +52,19 @@ Java_com_crylent_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jo
     }
 
     uint8_t i;
-    if (channel == MASTER_CHANNEL) {
-        FXList& masterFx = AudioEngine::getMasterFX();
-        i = masterFx.addEffect(std::move(effect));
-    } else {
-        FXList& fx = AudioEngine::getChannels()[channel]->getEffects();
-        i = fx.addEffect(std::move(effect));
-    }
+    FXList& fx = getFXList(channel);
+    if (index == -1) i = fx.addEffect(std::move(effect));
+    else i = fx.insertEffect(std::move(effect), index);
+    /*if (channel == MASTER_CHANNEL) {
+        FXList& fx = AudioEngine::getMasterFX();
+    }*/
     return static_cast<jbyte>(i);
 }
 
 #undef GET_FLOAT_PARAM
+#undef GET_INT_PARAM
+#undef LIMITER
+#undef FILTER
 
 #define THRESHOLD 1
 #define LIMIT 2
@@ -157,12 +157,25 @@ Java_com_crylent_midilib_soundfx_SoundFX_externalEditEffectInt(JNIEnv *env, jobj
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_AudioEngine_clearEffects([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel) {
+Java_com_crylent_midilib_soundfx_FXList_moveEffect([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz,
+                                                   jbyte channel, jbyte index, jbyte new_index) {
+    getFXList(channel).moveEffect(index, new_index);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_crylent_midilib_soundfx_FXList_removeEffect([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz,
+                                                     jbyte channel, jbyte index) {
+    getFXList(channel).removeEffect(index);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_crylent_midilib_soundfx_FXList_clearEffects([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel) {
     FXList& fxList = getFXList(channel);
     fxList.clearEffects();
 }
 
-#undef LIMITER
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_crylent_midilib_soundfx_SoundFX_externalSetEnabled(JNIEnv *env, jobject thiz, jboolean enabled) {

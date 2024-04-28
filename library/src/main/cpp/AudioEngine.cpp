@@ -12,7 +12,7 @@ SharingMode AudioEngine::mSharingMode = SharingMode::Exclusive;
 int32_t AudioEngine::mSampleRate = AUTO_DEFINITION;
 int32_t AudioEngine::mBufferSize = AUTO_DEFINITION;
 double AudioEngine::mTimeIncrement;
-shared_ptr<FXList> AudioEngine::mMasterEffects;
+shared_ptr<FXList> AudioEngine::mMasterEffects = mPlayer->getEffects();
 vector<unique_ptr<Channel>> AudioEngine::mChannels = vector<unique_ptr<Channel>>();
 vector<OnStartCallback> AudioEngine::mOnStartListeners = vector<OnStartCallback>();
 
@@ -50,7 +50,6 @@ Result AudioEngine::start() {
         initChannels(defaultSynth);
     }
 
-    mMasterEffects = mPlayer->getEffects();
     auto* callback = new AudioCallback(*mPlayer);
 
     AudioStreamBuilder builder;

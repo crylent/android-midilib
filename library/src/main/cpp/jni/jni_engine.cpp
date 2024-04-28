@@ -121,3 +121,9 @@ JNIEXPORT jint JNICALL
 Java_com_crylent_midilib_AudioEngine_getBufferSize([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
     return AudioEngine::getBufferSize();
 }
+
+extern "C"
+JNIEXPORT jbyte JNICALL
+Java_com_crylent_midilib_AudioEngine_getNumberOfChannels([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
+    return AudioEngine::getNumChannels();
+}
