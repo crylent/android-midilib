@@ -18,7 +18,7 @@ public:
 
 private:
     float mThreshold = 0.7; // from 0.0 to 1.0, 0.7 ~= -3 dB
-    float mLimit = 0.99; // from 0.0 to 1.0, 0.99 ~= -1 dB
+    float mLimit = 0.99; // from 0.0 to 1.0, 0.99 ~= -0.1 dB
     double mAttack = 0; // seconds
     double mRelease = 0.05; // seconds
 
