@@ -51,6 +51,9 @@ Java_com_crylent_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jo
             throw std::runtime_error("Unexpected effect ID");
     }
 
+    GET_INT_PARAM(env, enabled);
+    effect->isEnabled = enabled;
+
     uint8_t i;
     FXList& fx = getFXList(channel);
     if (index == -1) i = fx.addEffect(std::move(effect));

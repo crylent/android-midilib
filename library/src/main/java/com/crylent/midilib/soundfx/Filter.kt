@@ -19,7 +19,7 @@ class Filter(
     var type = type
         set(value) {
             field = value
-            updateIntParameter(TYPE, type.ordinal);
+            updateIntParameter(TYPE, type.ordinal)
         }
     var cornerFrequency = cornerFrequency
         set(value) {
@@ -44,6 +44,7 @@ class Filter(
 
     override fun getId() = 2
     override fun getConfig(): Map<String, Number> = mapOf(
+        ENABLED to isEnabled,
         TYPE to type.ordinal,
         FREQUENCY to cornerFrequency,
         Q to q,
@@ -53,6 +54,7 @@ class Filter(
 
     override fun clone() = Filter(type, cornerFrequency, q, gain, bandwidth)
 
+    @Suppress("unused")
     companion object {
         private val simpleFilters = listOf(
             Type.AllPass, Type.HighPass, Type.LowPass,

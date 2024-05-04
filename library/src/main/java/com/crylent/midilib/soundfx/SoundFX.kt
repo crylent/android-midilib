@@ -1,17 +1,22 @@
 package com.crylent.midilib.soundfx
 
 abstract class SoundFX: Cloneable {
+    var enabled = true
+        set(value) {
+            field = value
+            if (linkedChannel != NOT_LINKED) {
+                externalSetEnabled(enabled)
+            }
+        }
+
+    protected val isEnabled get() = if (enabled) 1 else 0
+
     abstract fun getId(): Int
     abstract fun getConfig(): Map<String, Number>
 
-    fun setEnabled(enabled: Boolean) {
-        if (linkedChannel != NOT_LINKED) {
-            externalSetEnabled(enabled)
-        }
-    }
     private external fun externalSetEnabled(enabled: Boolean)
-    fun enable() = setEnabled(true)
-    fun disable() = setEnabled(false)
+    fun enable() { enabled = true }
+    fun disable() { enabled = false }
 
     fun getFloatParameter(param: String): Float = getConfig()[param]!!.toFloat()
     fun getIntParameter(param: String): Int = getConfig()[param]!!.toInt()
@@ -46,6 +51,7 @@ abstract class SoundFX: Cloneable {
 
         const val PUSH_BACK: Byte = -1
 
+        const val ENABLED = "enabled"
         const val THRESHOLD = "threshold"
         const val LIMIT = "limit"
         const val ATTACK = "attack"

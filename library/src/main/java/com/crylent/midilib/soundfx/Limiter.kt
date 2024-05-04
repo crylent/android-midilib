@@ -1,5 +1,6 @@
 package com.crylent.midilib.soundfx
 
+@Suppress("unused")
 class Limiter(
     threshold: Float = 0.7f,
     limit: Float = 0.99f,
@@ -28,7 +29,8 @@ class Limiter(
         }
 
     override fun getId() = 1
-    override fun getConfig() = mapOf(
+    override fun getConfig(): Map<String, Number> = mapOf(
+        ENABLED to isEnabled,
         THRESHOLD to threshold,
         LIMIT to limit,
         ATTACK to attack,
