@@ -55,9 +55,6 @@ Java_com_crylent_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jo
     FXList& fx = getFXList(channel);
     if (index == -1) i = fx.addEffect(std::move(effect));
     else i = fx.insertEffect(std::move(effect), index);
-    /*if (channel == MASTER_CHANNEL) {
-        FXList& fx = AudioEngine::getMasterFX();
-    }*/
     return static_cast<jbyte>(i);
 }
 
