@@ -85,7 +85,7 @@ class Oscillator(
     }
 
 
-    fun loadWaveform() {
+    private fun loadWaveform() {
         if (sample == null || context == null) return
         val bytes = sample!!.readBytes(context!!)
         loadWaveform(bytes, bytes.size)

@@ -6,7 +6,7 @@
 #include "../log.h"
 
 float CustomOscillator::evalVoice(double time, float frequency) {
-    if (!mSamples) return sinf(calcPhase(time, frequency));
+    if (!mSamples || mSamples->empty()) return sinf(calcPhase(time, frequency));
     float fractionPhase = calcFractionPhase(time, frequency);
     float point = fractionPhase * mSamplesNum;
     size_t i = size_t(point);
