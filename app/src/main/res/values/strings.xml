@@ -9,4 +9,8 @@
     <string name="voices">Voices</string>
     <string name="filter">Filter\t\t\t</string>
     <string name="limiter">Limiter\t\t</string>
+    <string name="attack">Attack</string>
+    <string name="decay">Decay</string>
+    <string name="sustain">Sustain</string>
+    <string name="release">Release</string>
 </resources>
