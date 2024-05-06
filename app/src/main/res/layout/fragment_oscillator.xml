@@ -31,4 +31,34 @@
         app:max="60"
         app:min="-60" />
 
+    <com.crylent.midiapp.NumberPicker
+        android:id="@+id/unisonVoices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="5dp"
+        app:labelText="@string/voices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pitch"
+        app:max="60"
+        app:min="-60" />
+
+    <SeekBar
+        android:id="@+id/detune"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unisonVoices" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detune"
+        android:paddingBottom="10dp"
+        android:text="@string/detune" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

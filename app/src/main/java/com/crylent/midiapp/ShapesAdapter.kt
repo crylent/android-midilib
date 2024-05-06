@@ -28,6 +28,9 @@ class ShapesAdapter(
                 }
                 it.isSelected = true
                 adapter.oscillator.shape = shape!!
+                if (shape == Oscillator.Shape.CUSTOM) {
+                    adapter.oscillator.loadSample(adapter.mainActivity, Midi.ORGAN_SAMPLE)
+                }
 
                 mixerAdapter.setShape(adapter.oscIndex, shape!!)
             }

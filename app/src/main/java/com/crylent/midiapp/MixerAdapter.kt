@@ -17,7 +17,7 @@ class MixerAdapter: RecyclerView.Adapter<MixerAdapter.Holder>() {
                 button.setImageResource(ShapesDrawable[value?.shape]!!)
             }
 
-        val button = itemView.findViewById<ImageButton>(R.id.shape).apply {
+        val button: ImageButton = itemView.findViewById<ImageButton>(R.id.shape).apply {
             setOnClickListener {
                 OscillatorFragment.newInstance(adapterPosition).show(
                     (itemView.context as FragmentActivity).supportFragmentManager.beginTransaction(),

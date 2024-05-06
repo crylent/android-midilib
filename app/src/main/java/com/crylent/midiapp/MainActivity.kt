@@ -2,7 +2,6 @@ package com.crylent.midiapp
 
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,6 +13,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Midi.start(applicationContext)
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<SwitchMaterial>(R.id.filterSwitch).apply {
             setOnCheckedChangeListener { _, checked ->
-                Midi.filter.setEnabled(checked)
+                Midi.filter.enabled = checked
             }
         }
     }
