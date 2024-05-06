@@ -19,19 +19,43 @@
         tools:itemCount="5"
         tools:listitem="@layout/mixer_item" />
 
-    <Button
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/playSection"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mixer" />
+        app:layout_constraintTop_toBottomOf="@+id/mixer"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/playNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/play_note"/>
+
+        <Button
+            android:id="@+id/playChord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/playNote"
+            android:text="@string/play_chord" />
+
+        <Button
+            android:id="@+id/stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/playChord"
+            android:text="@string/stop" />
+    </RelativeLayout>
+
 
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/play"
+        app:layout_constraintTop_toBottomOf="@id/playSection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_horizontal">

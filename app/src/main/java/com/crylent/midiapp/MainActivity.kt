@@ -35,9 +35,22 @@ class MainActivity : AppCompatActivity() {
             adapter = MixerAdapter()
         }
 
-        findViewById<Button>(R.id.play).apply {
+        findViewById<Button>(R.id.playNote).apply {
             setOnClickListener {
                 AudioEngine.noteOn(0, 60, 1f)
+            }
+        }
+        findViewById<Button>(R.id.playChord).apply {
+            setOnClickListener {
+                AudioEngine.noteOn(0, 60, 0.25f)
+                AudioEngine.noteOn(0, 63, 0.25f)
+                AudioEngine.noteOn(0, 67, 0.25f)
+                AudioEngine.noteOn(0, 70, 0.25f)
+            }
+        }
+        findViewById<Button>(R.id.stop).apply {
+            setOnClickListener {
+                AudioEngine.allNotesOff(0)
             }
         }
 
