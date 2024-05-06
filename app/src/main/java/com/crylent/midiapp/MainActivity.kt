@@ -6,6 +6,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.crylent.midilib.AudioEngine
 import com.crylent.midilib.soundfx.Filter
 import com.google.android.material.switchmaterial.SwitchMaterial
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +71,31 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+        }
+
+        findViewById<SwitchMaterial>(R.id.limiterSwitch).apply {
+            setOnCheckedChangeListener { _, checked ->
+                Midi.limiter.enabled = checked
+            }
+        }
+
+        findViewById<SeekBar>(R.id.limiterGain).apply {
+            progress = (max - Midi.limiter.threshold * max).roundToInt()
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    Midi.limiter.threshold =
+                        if (progress == max) 0.001f
+                        else (max - progress) / max.toFloat()
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
         }
     }
 }

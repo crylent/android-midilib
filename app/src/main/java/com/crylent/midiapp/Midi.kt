@@ -16,7 +16,7 @@ object Midi {
 
     val instrument = Synthesizer(ADSREnvelope())
     val filter = Filter.simple(Filter.Type.LowPass, 1000f).apply { disable() }
-    private val limiter = Limiter()
+    val limiter = Limiter().apply { disable() }
 
     fun start(context: Context) {
         AudioEngine.setInstrument(0, instrument)
