@@ -5,4 +5,5 @@
     <string name="pitch">Pitch</string>
     <string name="detune">Detune</string>
     <string name="voices">Voices</string>
+    <string name="filter">Filter\t\t</string>
 </resources>
