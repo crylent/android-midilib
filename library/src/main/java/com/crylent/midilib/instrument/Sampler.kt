@@ -21,8 +21,14 @@ open class Sampler(envelope: Envelope): Instrument(envelope), SampleLoader {
         }
     }
 
+    fun copyAssetToRange(baseNote: Byte, min: Byte, max: Byte) {
+        addOnCreatedListener {
+            externalCopyAssetToRange(baseNote, min, max)
+        }
+    }
+
     private external fun externalLoadSample(wavData: ByteArray, dataSize: Int, note: Byte)
-    external fun copyAssetToRange(baseNote: Byte, min: Byte, max: Byte)
+    private external fun externalCopyAssetToRange(baseNote: Byte, min: Byte, max: Byte)
 
     override fun clone() = Sampler(envelope.clone())
 

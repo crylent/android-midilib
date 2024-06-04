@@ -261,9 +261,9 @@ Java_com_crylent_midilib_instrument_Sampler_externalLoadSample(JNIEnv *env, jobj
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_crylent_midilib_instrument_Sampler_copyAssetToRange(JNIEnv *env, jobject thiz,
-                                                             jbyte baseNote,
-                                                             jbyte min, jbyte max) {
+Java_com_crylent_midilib_instrument_Sampler_externalCopyAssetToRange(JNIEnv *env, jobject thiz,
+                                                                     jbyte baseNote,
+                                                                     jbyte min, jbyte max) {
     int32_t index = getLibIndex(env, thiz);
     auto& inst = GET_SAMPLER(index);
     inst.copySampleToRange(baseNote, min, max);
