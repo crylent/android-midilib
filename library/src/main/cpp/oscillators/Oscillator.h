@@ -44,6 +44,7 @@ protected:
 private:
     float mAmplitude = 1;
     float mPhase = 0;
+    float mPhase_2PI = 0;
     float mFreqFactor = 1;
 
     unique_ptr<Detune> mDetune = nullptr;

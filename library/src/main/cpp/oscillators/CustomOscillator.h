@@ -16,9 +16,15 @@ public:
 
     void loadWaveform(vector<uint8_t>& wavData);
 
+    static void enableLinearInterpolation(bool enable) {
+        mLinearInterpolation = enable;
+    }
+
 private:
-    unique_ptr<vector<float>> mSamples = make_unique<vector<float>>();
-    const size_t mSamplesNum = 1e5;
+    vector<float> mSamples = vector<float>();
+    const size_t mSamplesNum = 1e4;
+
+    static bool mLinearInterpolation;
 };
 
 

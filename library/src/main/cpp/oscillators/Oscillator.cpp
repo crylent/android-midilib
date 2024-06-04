@@ -20,7 +20,7 @@ float Oscillator::calcPhase(double time, float frequency) const {
 
 float Oscillator::calcFractionPhase(double time, float frequency) {
     float integral;
-    return modf(time * frequency * mFreqFactor + mPhase / (2 * M_PI), &integral);
+    return modf(time * frequency * mFreqFactor + mPhase_2PI, &integral);
 }
 
 /**
@@ -37,6 +37,7 @@ void Oscillator::setAmplitude(float amplitude) {
  */
 void Oscillator::setPhase(float phase) {
     mPhase = phase;
+    mPhase_2PI = phase / (2 * M_PI);
 }
 
 /**

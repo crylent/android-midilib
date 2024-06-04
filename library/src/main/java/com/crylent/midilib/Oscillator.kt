@@ -150,4 +150,11 @@ class Oscillator(
         if (!enabled) it.enabled = false
         if (detune != null) it.enableDetune(detune!!.unisonVoices, detune!!.detune)
     }
+
+    companion object {
+        /**
+         * Linear interpolation increases custom oscillator quality, but reduces performance
+         */
+        external fun enableLinearInterpolation(enable: Boolean)
+    }
 }

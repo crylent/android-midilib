@@ -279,3 +279,10 @@ Java_com_crylent_midilib_instrument_Sampler_00024Companion_externalSetResampling
         [[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jint quality) {
     Assets::setResamplingQuality(quality);
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_crylent_midilib_Oscillator_00024Companion_enableLinearInterpolation(
+        [[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jboolean enable) {
+    CustomOscillator::enableLinearInterpolation(enable);
+}
