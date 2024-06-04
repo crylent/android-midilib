@@ -1,11 +1,32 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.androidLibrary) apply true
+    alias(libs.plugins.jetbrainsKotlinAndroid) apply true
+    `maven-publish` apply true
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.crylent"
+            artifactId = "midilib"
+            version = "2.0"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
 }
 
 android {
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+
     namespace = "com.crylent.midilib"
     compileSdk = 34
 
@@ -34,16 +55,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
-            version = "3.26.3"
+            version = "3.22.1"
         }
     }
     ndkVersion = "25.2.9519653"
