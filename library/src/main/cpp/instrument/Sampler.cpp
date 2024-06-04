@@ -27,7 +27,7 @@ void Sampler::loadSample(int8_t note, vector<uint8_t>& wavData) {
 }
 
 void Sampler::copySampleToRange(int8_t baseNote, int8_t min, int8_t max) {
-    for (int8_t note = min; note <= max && note > 0; note++) {
+    for (int8_t note = min; note <= max && note >= 0; note++) {
         if (note == baseNote) continue;
         double ratio = NoteFrequency::get(baseNote) / NoteFrequency::get(note);
         resampleAndAssign(mSamples[baseNote], ratio, note);
